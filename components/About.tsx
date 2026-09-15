@@ -1,15 +1,22 @@
 import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
-import { about, education, profile } from "@/data/content";
+import { about, domainAccent, education, profile } from "@/data/content";
 import { Cap, Globe, MapPin, Server } from "./icons";
 
 const FACT_ICONS = { pin: MapPin, server: Server, cap: Cap, globe: Globe } as const;
+
+const FACT_ACCENTS = [
+  domainAccent.compiled,
+  domainAccent.python,
+  domainAccent.infra,
+  domainAccent.frontend,
+];
 
 export function About() {
   return (
     <section id="about" className="border-t border-line-soft py-16 sm:py-24">
       <div className="shell">
-        <SectionHeading title="About" note={profile.location} />
+        <SectionHeading title="About" accent="var(--color-violet)" note={profile.location} />
 
         <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.9fr)] lg:gap-20">
           <Reveal>
@@ -29,11 +36,14 @@ export function About() {
             </div>
 
             <ul className="mt-9 grid gap-x-8 gap-y-4 sm:grid-cols-2">
-              {about.facts.map((f) => {
+              {about.facts.map((f, i) => {
                 const Icon = FACT_ICONS[f.icon as keyof typeof FACT_ICONS];
                 return (
                   <li key={f.label} className="flex items-start gap-3">
-                    <Icon className="mt-0.5 shrink-0 text-signal" />
+                    <Icon
+                      className="mt-0.5 shrink-0"
+                      style={{ color: FACT_ACCENTS[i % FACT_ACCENTS.length] }}
+                    />
                     <span>
                       <span className="data block text-ink-faint">{f.label}</span>
                       <span className="text-[0.9375rem] text-ink-dim">{f.value}</span>
@@ -49,11 +59,11 @@ export function About() {
             <ul className="mt-6 space-y-7">
               {education.map((e) => (
                 <li key={e.credential} className="flex gap-3.5">
-                  <Cap className="mt-1 shrink-0 text-ink-faint" />
+                  <Cap className="mt-1 shrink-0" style={{ color: "var(--color-violet)" }} />
                   <div>
                     <div className="flex flex-wrap items-baseline justify-between gap-x-4">
                       <p className="font-medium text-ink">{e.credential}</p>
-                      <span className="data shrink-0 text-signal">{e.year}</span>
+                      <span className="data shrink-0" style={{ color: "var(--color-violet)" }}>{e.year}</span>
                     </div>
                     <p className="mt-1 text-[0.9375rem] text-ink-mute">{e.place}</p>
                     <p className="data mt-0.5 text-ink-faint">{e.detail}</p>

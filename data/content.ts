@@ -307,3 +307,109 @@ export const navLinks = [
   { href: "#about", label: "About" },
   { href: "#contact", label: "Contact" },
 ] as const;
+
+/* ── Semantic colour system ───────────────────────────────────
+   Each accent stands for a domain, so colour on this site carries
+   information. Anything unmapped falls back to neutral ink. */
+export type Domain = "compiled" | "python" | "infra" | "frontend";
+
+export const domainLabel: Record<Domain, string> = {
+  compiled: "Compiled",
+  python: "Python",
+  infra: "Infrastructure",
+  frontend: "Frontend",
+};
+
+export const domainAccent: Record<Domain, string> = {
+  compiled: "var(--color-vermilion)",
+  python: "var(--color-amber)",
+  infra: "var(--color-cyan)",
+  frontend: "var(--color-violet)",
+};
+
+const TECH_DOMAIN: Record<string, Domain> = {
+  Java: "compiled",
+  "C++": "compiled",
+  "Spring Boot": "compiled",
+  "Spring Security": "compiled",
+  "Spring MVC": "compiled",
+  Hibernate: "compiled",
+  JPA: "compiled",
+  JUnit: "compiled",
+  Maven: "compiled",
+  Gradle: "compiled",
+  Selenium: "compiled",
+
+  Python: "python",
+  Django: "python",
+  "Django 5": "python",
+  "Django REST Framework": "python",
+  DRF: "python",
+  Celery: "python",
+  SimpleJWT: "python",
+  T5: "python",
+
+  PostgreSQL: "infra",
+  MySQL: "infra",
+  SQLite: "infra",
+  Redis: "infra",
+  RabbitMQ: "infra",
+  MinIO: "infra",
+  Keycloak: "infra",
+  Docker: "infra",
+  Nginx: "infra",
+  Jenkins: "infra",
+  Linux: "infra",
+  Git: "infra",
+  Postman: "infra",
+  JWT: "infra",
+  Supabase: "infra",
+  Vercel: "infra",
+  REST: "infra",
+  "REST APIs": "infra",
+
+  TypeScript: "frontend",
+  JavaScript: "frontend",
+  React: "frontend",
+  "Next.js": "frontend",
+  "Tailwind CSS": "frontend",
+  Tailwind: "frontend",
+  Bootstrap: "frontend",
+  HTML: "frontend",
+  CSS: "frontend",
+  "React Query": "frontend",
+  Vite: "frontend",
+  "Node.js": "frontend",
+  "Gemini API": "frontend",
+};
+
+const TAG_DOMAIN: Record<string, Domain> = {
+  Java: "compiled",
+  "C++": "compiled",
+  Python: "python",
+  AI: "python",
+  DevOps: "infra",
+  Frontend: "frontend",
+};
+
+export function domainOf(name: string): Domain | undefined {
+  return TECH_DOMAIN[name];
+}
+
+export function tagDomain(tag: string): Domain | undefined {
+  return TAG_DOMAIN[tag];
+}
+
+/** CSS colour for a technology or tag; undefined when unmapped. */
+export function accentOf(name: string): string | undefined {
+  const d = TECH_DOMAIN[name] ?? TAG_DOMAIN[name];
+  return d ? domainAccent[d] : undefined;
+}
+
+/** Legend shown under the stack grid. */
+export const domainLegend: { domain: Domain; label: string; blurb: string }[] = [
+  { domain: "compiled", label: "Compiled", blurb: "Java, Spring, the JVM side" },
+  { domain: "python", label: "Python", blurb: "Django, DRF, Celery" },
+  { domain: "infra", label: "Infrastructure", blurb: "Data stores, queues, deployment" },
+  { domain: "frontend", label: "Frontend", blurb: "React, Next.js, TypeScript" },
+];

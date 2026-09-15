@@ -26,6 +26,7 @@ only file you need to edit to keep the site current — nothing is hardcoded in 
 | `projectTags` | Filter chips. A tag with zero matches hides itself |
 | `techStack` | The logo grid. `core: true` highlights a tile |
 | `concepts` | Text chips for skills that have no brand logo |
+| `TECH_DOMAIN` / `TAG_DOMAIN` | Which accent colour each technology and tag gets |
 | `education` | The list beside the About copy |
 | `navLinks` | Nav items — each `href` must match a `<section id="...">` |
 
@@ -89,10 +90,19 @@ The whole page is statically prerendered, so it serves from the CDN with no serv
 
 Worth knowing before changing things:
 
-- **Palette** is defined once in [`app/globals.css`](app/globals.css) under `@theme`, in OKLCH.
-  The surfaces are deliberately achromatic (chroma `0`) so the single vermilion signal carries the
-  brand. Every text pair is verified at ≥ 4.5:1 against its background; `--color-ink-faint` is
-  the one exception at 3.9:1 and is used only for large or decorative text.
+- **Colour is semantic, not decorative.** Four accents each stand for a domain — vermilion for
+  compiled/JVM work, amber for Python, cyan for data and infrastructure, violet for frontend. The
+  same coding runs through stack tiles, project tags, timeline dots, filter pills and the marquee,
+  so a glance tells you what kind of work a project is. The mapping lives in `TECH_DOMAIN` and
+  `TAG_DOMAIN` in [`data/content.ts`](data/content.ts); `accentOf(name)` resolves it. Anything
+  unmapped falls back to neutral ink rather than guessing a colour.
+- **Surfaces stay achromatic** (chroma `0`) so the accents do all the work. Contrast was measured
+  against the *rendered* page, aurora included, not just the token values — the worst-case
+  background pixel is `#231d11`, against which body text holds 5.51:1 and every accent clears
+  4.5:1. If you make the aurora stronger, re-measure; it lifts the background behind text.
+- **The aurora** ([`components/ui/Aurora.tsx`](components/ui/Aurora.tsx)) is four blurred pools of
+  the palette on a fixed layer at 10% opacity. Keep them spread apart — overlapping cyan and amber
+  turns muddy green.
 - **Filled accent buttons use dark text** (`text-bg-sunken`). White on vermilion is 2.97:1 and
   fails contrast — do not switch it.
 - **Scroll reveals are visible by default.** The hidden from-state is gated on the CSS
@@ -119,8 +129,16 @@ Worth knowing before changing things:
   `AnimatePresence`'s `onExitComplete`, so the two never race. Don't reintroduce a
   `body { overflow: hidden }` lock while the sheet is open either; that blocks the scroll for the
   same reason, and the sheet sits in a fixed header so it does not need one.
-- **Reduced motion** is honoured throughout: animations collapse, smooth scrolling is disabled,
-  and reveals render immediately.
+- **Motion primitives** live in [`components/ui/`](components/ui/): `WordReveal` (staggered
+  headline), `Scramble` (decode-on-scroll headings), `Magnetic` (buttons pulled toward the
+  pointer), `Tilt` (3D perspective, mouse only), `Marquee` (seamless tech strip), `Cursor` and
+  `Curtain`. Every one degrades: the real text is server-rendered before any scramble or
+  word-split runs, so crawlers and JS-less visitors get the finished content.
+- **The custom cursor renders nothing at all** unless the device has a fine pointer and allows
+  motion. Rendering it unconditionally strands the dot and ring in the top-left corner of every
+  phone — gate the render, not just the effect.
+- **Reduced motion** is honoured throughout: aurora, curtain and cursor are removed outright, the
+  marquee and satellites stop, reveals render immediately, and smooth scrolling is disabled.
 
 ## Contact
 

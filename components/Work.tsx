@@ -3,14 +3,19 @@ import { SectionHeading } from "./SectionHeading";
 import { WorkIndex } from "./WorkIndex";
 import { SystemTrace } from "./SystemTrace";
 import { StackRow } from "./StackRow";
-import { featured, projects } from "@/data/content";
+import { Tilt } from "./ui/Tilt";
+import { accentOf, domainAccent, featured, projects, tagDomain } from "@/data/content";
 import { ArrowUpRight, GitHub } from "./icons";
 
 export function Work() {
   return (
     <section id="work" className="py-16 sm:py-24">
       <div className="shell">
-        <SectionHeading title="Selected work" note={`${projects.length + featured.length} projects`} />
+        <SectionHeading
+          title="Selected work"
+          accent="var(--color-vermilion)"
+          note={`${projects.length + featured.length} projects`}
+        />
 
         <div className="mt-10 sm:mt-14">
           {featured.map((p, i) => (
@@ -21,13 +26,39 @@ export function Work() {
               className="group border-t border-line-soft py-9 first:border-t-0 first:pt-0 sm:py-12"
             >
               <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                <span className="font-mono text-data text-signal">{p.year}</span>
+                <span
+                  className="font-mono text-data"
+                  style={{ color: accentOf(p.tags[0]) ?? "var(--color-signal)" }}
+                >
+                  {p.year}
+                </span>
                 {p.kicker ? <span className="text-[0.9375rem] text-ink-mute">{p.kicker}</span> : null}
               </div>
 
-              <h3 className="mt-2.5 text-h3 font-bold text-ink transition-colors duration-300 group-hover:text-signal">
+              <h3
+                className="mt-2.5 text-h3 font-bold text-ink transition-colors duration-300 group-hover:[color:var(--accent)]"
+                style={{ ["--accent" as string]: accentOf(p.tags[0]) ?? "var(--color-signal)" }}
+              >
                 {p.name}
               </h3>
+
+              <ul className="mt-3 flex flex-wrap gap-1.5">
+                {p.tags.map((t) => {
+                  const d = tagDomain(t);
+                  return (
+                    <li
+                      key={t}
+                      style={d ? ({ ["--accent" as string]: domainAccent[d] }) : undefined}
+                      className={[
+                        "rounded-chip border px-2 py-0.5 font-mono text-[0.6875rem]",
+                        d ? "accent-chip" : "border-line-soft text-ink-faint",
+                      ].join(" ")}
+                    >
+                      {t}
+                    </li>
+                  );
+                })}
+              </ul>
 
               <div
                 className={
@@ -81,7 +112,11 @@ export function Work() {
                   ) : null}
                 </div>
 
-                {p.schematic ? <SystemTrace className="md:justify-self-end" /> : null}
+                {p.schematic ? (
+                  <Tilt max={5} className="md:justify-self-end">
+                    <SystemTrace />
+                  </Tilt>
+                ) : null}
               </div>
             </Reveal>
           ))}

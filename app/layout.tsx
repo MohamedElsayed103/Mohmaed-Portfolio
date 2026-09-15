@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Schibsted_Grotesk, Geist_Mono } from "next/font/google";
 import { profile } from "@/data/content";
+import { Aurora } from "@/components/ui/Aurora";
+import { Curtain } from "@/components/ui/Curtain";
+import { Cursor } from "@/components/ui/Cursor";
 import "./globals.css";
 
 const schibsted = Schibsted_Grotesk({
@@ -83,6 +86,9 @@ export default function RootLayout({
         >
           Skip to content
         </a>
+        <Aurora />
+        <Curtain />
+        <Cursor />
         {children}
       </body>
     </html>

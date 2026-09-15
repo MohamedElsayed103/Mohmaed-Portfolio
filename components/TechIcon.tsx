@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { techIcons } from "@/data/techIcons";
 
 /**
@@ -9,10 +10,12 @@ export function TechIcon({
   name,
   size = 16,
   className,
+  style,
 }: {
   name: string;
   size?: number;
   className?: string;
+  style?: CSSProperties;
 }) {
   const path = techIcons[name];
   if (!path) return null;
@@ -26,6 +29,7 @@ export function TechIcon({
       aria-hidden="true"
       focusable="false"
       className={className}
+      style={style}
     >
       <path d={path} />
     </svg>

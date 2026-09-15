@@ -1,4 +1,6 @@
-type IconProps = { className?: string; size?: number };
+import type { CSSProperties } from "react";
+
+type IconProps = { className?: string; size?: number; style?: CSSProperties };
 
 const base = (size: number) => ({
   width: size,
@@ -9,9 +11,9 @@ const base = (size: number) => ({
   focusable: "false" as const,
 });
 
-export function ArrowDown({ className, size = 14 }: IconProps) {
+export function ArrowDown({ className, size = 14, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <path
         d="M8 3v10M4 9.5 8 13.5l4-4"
         stroke="currentColor"
@@ -23,9 +25,9 @@ export function ArrowDown({ className, size = 14 }: IconProps) {
   );
 }
 
-export function ArrowRight({ className, size = 14 }: IconProps) {
+export function ArrowRight({ className, size = 14, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <path
         d="M3 8h10M9.5 4l4 4-4 4"
         stroke="currentColor"
@@ -37,9 +39,9 @@ export function ArrowRight({ className, size = 14 }: IconProps) {
   );
 }
 
-export function ArrowUpRight({ className, size = 13 }: IconProps) {
+export function ArrowUpRight({ className, size = 13, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <path
         d="M5 11 11 5M5.5 5H11v5.5"
         stroke="currentColor"
@@ -51,9 +53,9 @@ export function ArrowUpRight({ className, size = 13 }: IconProps) {
   );
 }
 
-export function GitHub({ className, size = 15 }: IconProps) {
+export function GitHub({ className, size = 15, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <path
         d="M8 .5a7.5 7.5 0 0 0-2.37 14.62c.37.07.51-.16.51-.36l-.01-1.26c-2.09.45-2.53-1-2.53-1-.34-.87-.83-1.1-.83-1.1-.68-.47.05-.46.05-.46.75.05 1.15.78 1.15.78.67 1.15 1.76.82 2.19.63.07-.49.26-.82.48-1.01-1.67-.19-3.42-.84-3.42-3.72 0-.82.29-1.5.78-2.02-.08-.19-.34-.96.07-2 0 0 .63-.2 2.07.77a7.2 7.2 0 0 1 3.77 0c1.44-.97 2.07-.77 2.07-.77.41 1.04.15 1.81.07 2 .49.52.78 1.2.78 2.02 0 2.89-1.76 3.53-3.43 3.71.27.23.51.69.51 1.4l-.01 2.07c0 .2.14.44.52.36A7.5 7.5 0 0 0 8 .5Z"
         fill="currentColor"
@@ -62,9 +64,9 @@ export function GitHub({ className, size = 15 }: IconProps) {
   );
 }
 
-export function LinkedIn({ className, size = 15 }: IconProps) {
+export function LinkedIn({ className, size = 15, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <path
         d="M3.4 5.6H1V15h2.4V5.6ZM2.2 1a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8ZM15 9.6c0-2.6-1.4-3.8-3.2-3.8-1.5 0-2.2.82-2.55 1.4V5.6H6.9c.03.68 0 9.4 0 9.4h2.35V9.75c0-.21.02-.42.08-.57.16-.42.55-.86 1.2-.86.85 0 1.19.65 1.19 1.6V15H15V9.6Z"
         fill="currentColor"
@@ -73,9 +75,9 @@ export function LinkedIn({ className, size = 15 }: IconProps) {
   );
 }
 
-export function Mail({ className, size = 15 }: IconProps) {
+export function Mail({ className, size = 15, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <rect x="1.25" y="3.25" width="13.5" height="9.5" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
       <path
         d="m2 4.75 5.19 3.67c.49.34 1.13.34 1.62 0L14 4.75"
@@ -87,9 +89,9 @@ export function Mail({ className, size = 15 }: IconProps) {
   );
 }
 
-export function Phone({ className, size = 15 }: IconProps) {
+export function Phone({ className, size = 15, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <path
         d="M5.3 1.8 6.6 4.5c.14.3.08.66-.16.89l-1.1 1.05a9.6 9.6 0 0 0 4.22 4.22l1.05-1.1c.23-.24.59-.3.89-.16l2.7 1.3c.31.15.49.49.43.83l-.35 1.94a1 1 0 0 1-1.1.81C6.97 13.7 2.3 9.03 1.72 2.82a1 1 0 0 1 .81-1.1l1.94-.35c.34-.06.68.12.83.43Z"
         stroke="currentColor"
@@ -100,9 +102,9 @@ export function Phone({ className, size = 15 }: IconProps) {
   );
 }
 
-export function Copy({ className, size = 14 }: IconProps) {
+export function Copy({ className, size = 14, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <rect x="5.25" y="5.25" width="9" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
       <path
         d="M11 3.5v-.25A1.5 1.5 0 0 0 9.5 1.75h-6.25A1.5 1.5 0 0 0 1.75 3.25V9.5A1.5 1.5 0 0 0 3.25 11h.25"
@@ -114,9 +116,9 @@ export function Copy({ className, size = 14 }: IconProps) {
   );
 }
 
-export function Check({ className, size = 14 }: IconProps) {
+export function Check({ className, size = 14, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <path
         d="m3 8.5 3.2 3.2L13 5"
         stroke="currentColor"
@@ -128,9 +130,9 @@ export function Check({ className, size = 14 }: IconProps) {
   );
 }
 
-export function MapPin({ className, size = 15 }: IconProps) {
+export function MapPin({ className, size = 15, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <path
         d="M13 6.83C13 10.2 8 15 8 15S3 10.2 3 6.83a5 5 0 0 1 10 0Z"
         stroke="currentColor"
@@ -142,9 +144,9 @@ export function MapPin({ className, size = 15 }: IconProps) {
   );
 }
 
-export function Server({ className, size = 15 }: IconProps) {
+export function Server({ className, size = 15, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <rect x="1.75" y="2.25" width="12.5" height="4.5" rx="1.25" stroke="currentColor" strokeWidth="1.3" />
       <rect x="1.75" y="9.25" width="12.5" height="4.5" rx="1.25" stroke="currentColor" strokeWidth="1.3" />
       <circle cx="4.5" cy="4.5" r="0.85" fill="currentColor" />
@@ -153,35 +155,35 @@ export function Server({ className, size = 15 }: IconProps) {
   );
 }
 
-export function Cap({ className, size = 15 }: IconProps) {
+export function Cap({ className, size = 15, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <path d="M8 2 1.5 5.5 8 9l6.5-3.5L8 2Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
       <path d="M4 7.2v3.6c0 .9 1.8 2.2 4 2.2s4-1.3 4-2.2V7.2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
     </svg>
   );
 }
 
-export function Globe({ className, size = 15 }: IconProps) {
+export function Globe({ className, size = 15, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <circle cx="8" cy="8" r="6.25" stroke="currentColor" strokeWidth="1.3" />
       <path d="M1.9 8h12.2M8 1.75c1.6 1.7 2.5 3.9 2.5 6.25S9.6 12.55 8 14.25C6.4 12.55 5.5 10.35 5.5 8s.9-4.55 2.5-6.25Z" stroke="currentColor" strokeWidth="1.3" />
     </svg>
   );
 }
 
-export function Sparkle({ className, size = 14 }: IconProps) {
+export function Sparkle({ className, size = 14, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <path d="M8 1.5 9.4 6 14 7.5 9.4 9 8 13.5 6.6 9 2 7.5 6.6 6 8 1.5Z" fill="currentColor" />
     </svg>
   );
 }
 
-export function Download({ className, size = 14 }: IconProps) {
+export function Download({ className, size = 14, style }: IconProps) {
   return (
-    <svg {...base(size)} className={className}>
+    <svg {...base(size)} className={className} style={style}>
       <path d="M8 1.75v8.5M4.75 7.25 8 10.5l3.25-3.25M2.25 12.5v.75a1 1 0 0 0 1 1h9.5a1 1 0 0 0 1-1v-.75"
         stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>

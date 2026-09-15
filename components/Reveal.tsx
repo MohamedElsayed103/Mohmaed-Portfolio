@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ElementType, type ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 type RevealProps = {
   children: ReactNode;
@@ -9,6 +9,8 @@ type RevealProps = {
   className?: string;
   as?: ElementType;
   id?: string;
+  /** Merged with the stagger delay — used to pass --accent down. */
+  style?: CSSProperties;
 };
 
 /**
@@ -25,6 +27,7 @@ export function Reveal({
   className,
   as: Tag = "div",
   id,
+  style,
 }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
 
@@ -62,7 +65,11 @@ export function Reveal({
       ref={ref}
       id={id}
       data-reveal=""
-      style={delay ? ({ "--reveal-delay": `${delay}ms` } as React.CSSProperties) : undefined}
+      style={
+        delay || style
+          ? ({ ...style, ...(delay ? { "--reveal-delay": `${delay}ms` } : {}) } as CSSProperties)
+          : undefined
+      }
       className={className}
     >
       {children}

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
-import { profile } from "@/data/content";
+import { domainAccent, profile } from "@/data/content";
 import { ArrowUpRight, Check, Copy, Download, GitHub, LinkedIn, Mail, MapPin, Phone } from "./icons";
 
 export function Contact() {
@@ -22,14 +22,27 @@ export function Contact() {
   }
 
   const links = [
-    { href: `mailto:${profile.email}`, Icon: Mail, label: profile.email, meta: "email" },
-    { href: profile.phoneHref, Icon: Phone, label: profile.phone, meta: "phone / WhatsApp" },
+    {
+      href: `mailto:${profile.email}`,
+      Icon: Mail,
+      label: profile.email,
+      meta: "email",
+      accent: domainAccent.compiled,
+    },
+    {
+      href: profile.phoneHref,
+      Icon: Phone,
+      label: profile.phone,
+      meta: "phone / WhatsApp",
+      accent: domainAccent.python,
+    },
     {
       href: profile.github,
       Icon: GitHub,
       label: profile.githubHandle,
       meta: "github",
       external: true,
+      accent: domainAccent.infra,
     },
     {
       href: profile.linkedin,
@@ -37,13 +50,14 @@ export function Contact() {
       label: profile.linkedinHandle,
       meta: "linkedin",
       external: true,
+      accent: domainAccent.frontend,
     },
   ];
 
   return (
     <section id="contact" className="border-t border-line-soft py-16 sm:py-24">
       <div className="shell">
-        <SectionHeading title="Get in touch" note="usually replies within a day" />
+        <SectionHeading title="Get in touch" accent="var(--color-signal)" note="usually replies within a day" />
 
         <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
           <Reveal>
@@ -76,14 +90,14 @@ export function Contact() {
 
           <Reveal delay={90}>
             <ul className="border-t border-line">
-              {links.map(({ href, Icon, label, meta, external }) => (
-                <li key={meta} className="border-b border-line-soft">
+              {links.map(({ href, Icon, label, meta, external, accent }) => (
+                <li key={meta} className="border-b border-line-soft" style={{ ["--accent" as string]: accent }}>
                   <a
                     href={href}
                     {...(external ? { target: "_blank", rel: "noreferrer noopener" } : {})}
                     className="group flex items-center gap-3.5 py-4 text-ink-dim transition-colors duration-200 hover:text-ink"
                   >
-                    <Icon className="shrink-0 text-ink-faint transition-colors duration-200 group-hover:text-signal" />
+                    <Icon className="shrink-0 text-ink-faint transition-colors duration-300 group-hover:[color:var(--accent)]" />
                     <span className="min-w-0 flex-1">
                       <span className="data block text-ink-faint">{meta}</span>
                       <span className="block truncate font-mono text-[0.9375rem]">{label}</span>
