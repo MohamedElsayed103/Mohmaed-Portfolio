@@ -19,14 +19,14 @@ only file you need to edit to keep the site current — nothing is hardcoded in 
 | Export | What it drives |
 | --- | --- |
 | `profile` | Name, role, contact details, CV path, hero positioning line |
-| `stackTicker` | The mono strip under the hero |
-| `about` | About paragraphs and the facts table |
+| `about` | About paragraphs and the facts grid |
 | `experience` | The timeline. Set `current: true` to get the live dot |
 | `featured` | The three in-depth project write-ups |
 | `projects` | The repository index table |
 | `projectTags` | Filter chips. A tag with zero matches hides itself |
-| `skills` | Stack columns. `core: true` marks an item with the accent dot |
-| `education`, `involvement` | The two lists at the bottom of About |
+| `techStack` | The logo grid. `core: true` highlights a tile |
+| `concepts` | Text chips for skills that have no brand logo |
+| `education` | The list beside the About copy |
 | `navLinks` | Nav items — each `href` must match a `<section id="...">` |
 
 ### Adding a project
@@ -45,7 +45,21 @@ Append an entry to `projects` in `data/content.ts`:
 }
 ```
 
-To promote one to a featured write-up, move it into `featured` and add `bullets: [...]`.
+To promote one to a featured write-up, move it into `featured` and add `bullets: [...]`. Set
+`schematic: true` on exactly one featured project to render the architecture diagram beside it.
+
+### Tech logos
+
+Logos come from [`data/techIcons.ts`](data/techIcons.ts), which is **generated** — do not edit it by
+hand. To add one, put the display name and its [simple-icons](https://simpleicons.org) slug in the
+`MAP` at the top of [`scripts/gen-icons.mjs`](scripts/gen-icons.mjs), then run:
+
+```bash
+node scripts/gen-icons.mjs data/techIcons.ts
+```
+
+Any name without an entry still renders — just as a label with no icon, never an empty slot. This
+keeps the multi-megabyte `simple-icons` package a devDependency; only the paths actually used ship.
 
 ### Replacing the CV
 
@@ -78,15 +92,16 @@ Worth knowing before changing things:
   class onto `<html>` also keeps the SSR markup identical to the hydrated DOM — doing the latter
   causes a React hydration mismatch. Reveals use a CSS *animation*, not a transition, so one cannot
   stall half-faded in a background tab.
-- **The hero schematic** (`components/SystemTrace.tsx`) is plain SVG. Connectors carry
-  `pathLength="100"`, so one dash geometry animates every path regardless of its real length. It
-  scrolls horizontally below ~480px rather than shrinking its labels past legibility.
+- **The architecture schematic** (`components/SystemTrace.tsx`) is plain SVG, shown beside the
+  Healthcare SaaS project it actually describes. Connectors carry `pathLength="100"`, so one dash
+  geometry animates every path regardless of its real length. It is laid out in two narrow columns
+  specifically so it fits a 360px phone without horizontal scrolling.
 - **Reduced motion** is honoured throughout: animations collapse, smooth scrolling is disabled,
   and reveals render immediately.
 
-## Contact form
+## Contact
 
-The form composes a `mailto:` link and opens the visitor's mail client — nothing is sent from the
-page, and there is no backend. If you later want real submissions, swap the `handleSubmit` body in
-[`components/Contact.tsx`](components/Contact.tsx) for a POST to Formspree, Resend or a route
-handler; the markup and validation stay as they are.
+There is no contact form and no backend — the section offers direct links (email, phone, GitHub,
+LinkedIn) plus a copy-email button, which is faster for a recruiter than filling in five fields. If
+you later want a form, add it to [`components/Contact.tsx`](components/Contact.tsx) and POST to
+Formspree, Resend or a route handler.

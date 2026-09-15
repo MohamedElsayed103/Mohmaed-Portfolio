@@ -141,3 +141,49 @@ export function MapPin({ className, size = 15 }: IconProps) {
     </svg>
   );
 }
+
+export function Server({ className, size = 15 }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <rect x="1.75" y="2.25" width="12.5" height="4.5" rx="1.25" stroke="currentColor" strokeWidth="1.3" />
+      <rect x="1.75" y="9.25" width="12.5" height="4.5" rx="1.25" stroke="currentColor" strokeWidth="1.3" />
+      <circle cx="4.5" cy="4.5" r="0.85" fill="currentColor" />
+      <circle cx="4.5" cy="11.5" r="0.85" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function Cap({ className, size = 15 }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <path d="M8 2 1.5 5.5 8 9l6.5-3.5L8 2Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
+      <path d="M4 7.2v3.6c0 .9 1.8 2.2 4 2.2s4-1.3 4-2.2V7.2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function Globe({ className, size = 15 }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <circle cx="8" cy="8" r="6.25" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M1.9 8h12.2M8 1.75c1.6 1.7 2.5 3.9 2.5 6.25S9.6 12.55 8 14.25C6.4 12.55 5.5 10.35 5.5 8s.9-4.55 2.5-6.25Z" stroke="currentColor" strokeWidth="1.3" />
+    </svg>
+  );
+}
+
+export function Sparkle({ className, size = 14 }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <path d="M8 1.5 9.4 6 14 7.5 9.4 9 8 13.5 6.6 9 2 7.5 6.6 6 8 1.5Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function Download({ className, size = 14 }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <path d="M8 1.75v8.5M4.75 7.25 8 10.5l3.25-3.25M2.25 12.5v.75a1 1 0 0 0 1 1h9.5a1 1 0 0 0 1-1v-.75"
+        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}

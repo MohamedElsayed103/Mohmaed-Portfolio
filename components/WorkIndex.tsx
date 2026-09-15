@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { projects, projectTags } from "@/data/content";
 import { ArrowUpRight } from "./icons";
+import { TechIcon } from "./TechIcon";
+import { techIcons } from "@/data/techIcons";
 
 export function WorkIndex() {
   const [tag, setTag] = useState<string>("All");
@@ -24,7 +26,7 @@ export function WorkIndex() {
   }, []);
 
   return (
-    <div className="mt-6 border-t border-line-soft pt-12">
+    <div className="mt-4 border-t border-line-soft pt-10">
       <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-5">
         <h3 className="text-h3 font-bold text-ink">Repository index</h3>
 
@@ -109,9 +111,10 @@ function Row({ project: p }: { project: (typeof projects)[number] }) {
         <p className="mt-1.5 max-w-[68ch] text-[0.9375rem] text-ink-mute">{p.summary}</p>
       </div>
 
-      <ul className="flex flex-wrap gap-x-3 gap-y-1">
+      <ul className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
         {p.stack.map((s) => (
-          <li key={s} className="font-mono text-data text-ink-faint">
+          <li key={s} className="inline-flex items-center gap-1.5 font-mono text-data text-ink-faint">
+            {techIcons[s] ? <TechIcon name={s} size={13} className="shrink-0 text-ink-mute" /> : null}
             {s}
           </li>
         ))}

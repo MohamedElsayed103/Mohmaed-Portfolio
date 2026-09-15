@@ -1,53 +1,60 @@
 import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
-import { skills } from "@/data/content";
+import { TechIcon } from "./TechIcon";
+import { concepts, techStack } from "@/data/content";
 
 export function Skills() {
-  const coreCount = skills.reduce((n, g) => n + g.items.filter((i) => i.core).length, 0);
-
   return (
-    <section id="stack" className="border-t border-line-soft py-20 sm:py-28">
+    <section id="stack" className="border-t border-line-soft py-16 sm:py-24">
       <div className="shell">
-        <SectionHeading title="Stack" note={`${coreCount} marked core`} />
+        <SectionHeading title="Stack" note="highlighted = core" />
 
-        <p className="mt-8 max-w-[62ch] text-lead text-ink-dim">
-          Ordered by what I actually reach for, not by what looks good in a list. The marked ones
-          are where I am fastest and most sure of myself.
-        </p>
+        <Reveal>
+          <p className="mt-7 max-w-[58ch] text-lead text-ink-dim">
+            What I actually reach for. The highlighted ones are where I am fastest.
+          </p>
+        </Reveal>
 
-        <div className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {skills.map((group, i) => (
-            <Reveal key={group.title} delay={i * 50}>
-              <div className="border-t border-line pt-5">
-                <h3 className="font-semibold text-ink">{group.title}</h3>
-                <p className="data mt-1 text-ink-faint">{group.note}</p>
+        <Reveal delay={60}>
+          <ul className="mt-10 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
+            {techStack.map((t) => (
+              <li
+                key={t.name}
+                className={[
+                  "flex items-center gap-3 rounded-card border px-3.5 py-3 transition-colors duration-200",
+                  t.core
+                    ? "border-line bg-bg-raised text-ink"
+                    : "border-line-soft text-ink-mute hover:border-line",
+                ].join(" ")}
+              >
+                <TechIcon
+                  name={t.name}
+                  size={20}
+                  className={t.core ? "shrink-0 text-signal" : "shrink-0 text-ink-faint"}
+                />
+                <span className={t.core ? "text-[0.9375rem] font-medium" : "text-[0.9375rem]"}>
+                  {t.name}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
 
-                <ul className="mt-5 space-y-2">
-                  {group.items.map((item) => (
-                    <li key={item.name} className="flex items-center gap-2.5">
-                      <span
-                        aria-hidden="true"
-                        className={[
-                          "h-1.5 w-1.5 shrink-0 rounded-full",
-                          item.core ? "bg-signal" : "bg-line-strong",
-                        ].join(" ")}
-                      />
-                      <span
-                        className={
-                          item.core
-                            ? "text-[0.9375rem] font-medium text-ink"
-                            : "text-[0.9375rem] text-ink-mute"
-                        }
-                      >
-                        {item.name}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+        <Reveal delay={120}>
+          <div className="mt-10 border-t border-line-soft pt-7">
+            <h3 className="data text-ink-faint">Also comfortable with</h3>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {concepts.map((c) => (
+                <li
+                  key={c}
+                  className="rounded-chip border border-line-soft px-2.5 py-1 font-mono text-[0.75rem] text-ink-mute"
+                >
+                  {c}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

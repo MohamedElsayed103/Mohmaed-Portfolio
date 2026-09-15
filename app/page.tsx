@@ -6,7 +6,7 @@ import { Skills } from "@/components/Skills";
 import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
-import { experience, profile, skills } from "@/data/content";
+import { experience, profile, techStack } from "@/data/content";
 
 /** JSON-LD so recruiters searching by name get a structured result. */
 const personSchema = {
@@ -24,7 +24,7 @@ const personSchema = {
     { "@type": "EducationalOrganization", name: "Information Technology Institute (ITI)" },
   ],
   worksFor: { "@type": "Organization", name: experience[0].company },
-  knowsAbout: skills.flatMap((g) => g.items.filter((i) => i.core).map((i) => i.name)),
+  knowsAbout: techStack.filter((t) => t.core).map((t) => t.name),
 };
 
 export default function Home() {

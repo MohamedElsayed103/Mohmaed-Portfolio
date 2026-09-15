@@ -1,76 +1,59 @@
 import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
 import { WorkIndex } from "./WorkIndex";
+import { SystemTrace } from "./SystemTrace";
+import { StackRow } from "./StackRow";
 import { featured, projects } from "@/data/content";
 import { ArrowUpRight, GitHub } from "./icons";
 
 export function Work() {
   return (
-    <section id="work" className="py-20 sm:py-28">
+    <section id="work" className="py-16 sm:py-24">
       <div className="shell">
-        <SectionHeading
-          title="Selected work"
-          note={`${featured.length} in depth · ${projects.length} more below`}
-        />
+        <SectionHeading title="Selected work" note={`${projects.length + featured.length} projects`} />
 
-        <div className="mt-14">
+        <div className="mt-10 sm:mt-14">
           {featured.map((p, i) => (
             <Reveal
               key={p.slug}
               delay={i * 60}
               as="article"
-              className="group border-t border-line-soft py-10 first:border-t-0 first:pt-0 sm:py-14"
+              className="group border-t border-line-soft py-9 first:border-t-0 first:pt-0 sm:py-12"
             >
-              <div className="grid gap-6 md:grid-cols-[minmax(0,0.75fr)_minmax(0,2fr)] md:gap-10 lg:gap-16">
-                {/* Meta rail */}
-                <div className="flex flex-row flex-wrap items-baseline gap-x-4 gap-y-2 md:flex-col md:items-start md:gap-3">
-                  <span className="font-mono text-data text-signal">{p.year}</span>
-                  {p.kicker ? (
-                    <span className="text-[0.9375rem] text-ink-mute">{p.kicker}</span>
-                  ) : null}
-                  <ul className="flex flex-wrap gap-1.5 md:mt-2">
-                    {p.tags.map((t) => (
-                      <li
-                        key={t}
-                        className="rounded-chip border border-line-soft px-2 py-0.5 font-mono text-[0.6875rem] text-ink-faint"
-                      >
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                <span className="font-mono text-data text-signal">{p.year}</span>
+                {p.kicker ? <span className="text-[0.9375rem] text-ink-mute">{p.kicker}</span> : null}
+              </div>
 
-                {/* Body */}
+              <h3 className="mt-2.5 text-h3 font-bold text-ink transition-colors duration-300 group-hover:text-signal">
+                {p.name}
+              </h3>
+
+              <div
+                className={
+                  p.schematic
+                    ? "mt-4 grid gap-8 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] md:gap-12"
+                    : "mt-4"
+                }
+              >
                 <div>
-                  <h3 className="text-h3 font-bold text-ink transition-colors duration-300 group-hover:text-signal">
-                    {p.name}
-                  </h3>
-                  <p className="mt-3 max-w-[68ch] text-lead text-ink-dim">{p.summary}</p>
+                  <p className="max-w-[64ch] text-lead text-ink-dim">{p.summary}</p>
 
                   {p.bullets ? (
-                    <ul className="mt-6 space-y-3">
+                    <ul className="mt-5 space-y-2.5">
                       {p.bullets.map((b) => (
-                        <li key={b} className="flex gap-3.5 text-[0.9375rem] text-ink-mute">
-                          <span
-                            aria-hidden="true"
-                            className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-signal"
-                          />
-                          <span className="max-w-[72ch]">{b}</span>
+                        <li key={b} className="flex gap-3 text-[0.9375rem] text-ink-mute">
+                          <span aria-hidden="true" className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-signal" />
+                          <span className="max-w-[68ch]">{b}</span>
                         </li>
                       ))}
                     </ul>
                   ) : null}
 
-                  <ul className="mt-7 flex flex-wrap gap-x-4 gap-y-2">
-                    {p.stack.map((s) => (
-                      <li key={s} className="font-mono text-data text-ink-faint">
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
+                  <StackRow items={p.stack} className="mt-6" />
 
                   {p.repo || p.live ? (
-                    <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+                    <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
                       {p.repo ? (
                         <a
                           href={p.repo}
@@ -90,14 +73,15 @@ export function Work() {
                           rel="noreferrer noopener"
                           className="inline-flex items-center gap-2 text-[0.9375rem] font-medium text-signal transition-colors duration-200 hover:text-signal-hot"
                         >
-                          Live
-                          <span className="font-mono text-data text-ink-faint">{p.liveLabel}</span>
+                          Live demo
                           <ArrowUpRight />
                         </a>
                       ) : null}
                     </div>
                   ) : null}
                 </div>
+
+                {p.schematic ? <SystemTrace className="md:justify-self-end" /> : null}
               </div>
             </Reveal>
           ))}
