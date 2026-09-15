@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { navLinks, profile } from "@/data/content";
+import { ScrollProgress } from "./ScrollProgress";
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -137,6 +138,8 @@ export function Nav() {
           </button>
         </div>
       </nav>
+
+      {scrolled ? <ScrollProgress /> : null}
 
       <AnimatePresence>
         {open ? (

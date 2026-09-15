@@ -186,6 +186,30 @@
   }
 }
 
+/* ── Portrait satellites ──────────────────────────────────────
+   A slow sine drift, each chip on its own period so the group
+   never pulses in unison. Killed by the reduced-motion block. */
+.satellite {
+  animation-name: satellite-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  will-change: transform;
+}
+
+.satellite:hover {
+  animation-play-state: paused;
+}
+
+@keyframes satellite-drift {
+  from {
+    transform: translate3d(0, 0.3rem, 0);
+  }
+  to {
+    transform: translate3d(0, -0.45rem, 0);
+  }
+}
+
 .trace-node-label {
   font-family: var(--font-mono);
   font-size: 11px;

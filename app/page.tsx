@@ -8,6 +8,8 @@ import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { experience, profile, techStack } from "@/data/content";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mohamed-elsayed.vercel.app";
+
 /** JSON-LD so recruiters searching by name get a structured result. */
 const personSchema = {
   "@context": "https://schema.org",
@@ -16,7 +18,7 @@ const personSchema = {
   jobTitle: profile.role,
   email: `mailto:${profile.email}`,
   telephone: profile.phoneHref.replace("tel:", ""),
-  image: profile.avatar,
+  image: new URL(profile.avatar, siteUrl).toString(),
   address: { "@type": "PostalAddress", addressLocality: "Cairo", addressCountry: "EG" },
   sameAs: [profile.github, profile.linkedin],
   alumniOf: [

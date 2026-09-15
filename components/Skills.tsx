@@ -21,10 +21,12 @@ export function Skills() {
               <li
                 key={t.name}
                 className={[
-                  "flex items-center gap-3 rounded-card border px-3.5 py-3 transition-colors duration-200",
+                  "flex items-center gap-3 rounded-card border px-3.5 py-3",
+                  "transition-[transform,border-color,background-color] duration-300 ease-[var(--ease-quart)]",
+                  "hover:-translate-y-0.5",
                   t.core
-                    ? "border-line bg-bg-raised text-ink"
-                    : "border-line-soft text-ink-mute hover:border-line",
+                    ? "border-line bg-bg-raised text-ink hover:border-signal"
+                    : "border-line-soft text-ink-mute hover:border-line hover:text-ink",
                 ].join(" ")}
               >
                 <TechIcon

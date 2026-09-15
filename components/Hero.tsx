@@ -1,26 +1,18 @@
-import Image from "next/image";
 import { Reveal } from "./Reveal";
+import { PortraitFrame } from "./PortraitFrame";
 import { profile } from "@/data/content";
 import { ArrowDown, ArrowUpRight, Download, GitHub, LinkedIn, Mail } from "./icons";
 
 export function Hero() {
+  // overflow-x-clip keeps the portrait's decorative glow from widening the
+  // page; clip (not hidden) leaves the vertical axis untouched.
   return (
-    <section id="top" className="pt-24 pb-14 sm:pt-32 lg:pt-36 lg:pb-20">
+    <section id="top" className="overflow-x-clip pt-24 pb-14 sm:pt-32 lg:pt-36 lg:pb-20">
       <div className="shell">
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-16">
           {/* Portrait — first thing on a phone, right-hand side on desktop */}
           <Reveal className="order-1 lg:order-2 lg:justify-self-end">
-            <div className="mx-auto w-[min(17rem,72vw)] lg:mx-0 lg:w-[20rem]">
-              <Image
-                src={profile.avatar}
-                alt={`${profile.name}, ${profile.role}, in Cairo`}
-                width={400}
-                height={400}
-                sizes="(max-width: 1024px) 72vw, 320px"
-                priority
-                className="w-full rounded-card border border-line object-cover"
-              />
-            </div>
+            <PortraitFrame />
           </Reveal>
 
           {/* Type */}

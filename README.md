@@ -61,10 +61,19 @@ node scripts/gen-icons.mjs data/techIcons.ts
 Any name without an entry still renders — just as a label with no icon, never an empty slot. This
 keeps the multi-megabyte `simple-icons` package a devDependency; only the paths actually used ship.
 
-### Replacing the CV
+### Replacing the CV or the photo
 
-Overwrite [`public/Mohamed-Elsayed-CV.pdf`](public/Mohamed-Elsayed-CV.pdf), keeping the filename.
-Both "Download CV" buttons point at `profile.cv`.
+For the CV, overwrite [`public/Mohamed-Elsayed-CV.pdf`](public/Mohamed-Elsayed-CV.pdf), keeping the
+filename — both "Download CV" buttons point at `profile.cv`.
+
+For the portrait, drop a new file at `public/mohamed-elsayed.jpg` and update `avatarWidth` /
+`avatarHeight` in `profile` to match. The frame renders it at a 4:5 ratio with `object-cover`, so
+crop to roughly head-and-shoulders first; a full-body shot leaves the face too small to read at
+300px. To re-crop from a larger original with the bundled `sharp`:
+
+```bash
+node -e "require('sharp')('original.jpg').extract({left:517,top:380,width:1216,height:1520}).resize(1000,1250).jpeg({quality:86}).toFile('public/mohamed-elsayed.jpg')"
+```
 
 ## Deploying to Vercel
 
@@ -96,6 +105,13 @@ Worth knowing before changing things:
   Healthcare SaaS project it actually describes. Connectors carry `pathLength="100"`, so one dash
   geometry animates every path regardless of its real length. It is laid out in two narrow columns
   specifically so it fits a 360px phone without horizontal scrolling.
+- **The portrait frame** ([`components/PortraitFrame.tsx`](components/PortraitFrame.tsx)) is an
+  offset hairline frame with viewfinder corner ticks, a soft brand-coloured glow, and five
+  technology satellites. Each satellite drifts on its own period (5.5s-6.8s) so the group never
+  pulses in unison, pauses on hover, and carries an `sr-only` label. Edit the `SATELLITES` array to
+  change which logos appear or where they sit — the offsets are percentages, so they hold position
+  as the frame scales. The hero section is `overflow-x-clip` so the glow can bleed without ever
+  widening the page.
 - **Reduced motion** is honoured throughout: animations collapse, smooth scrolling is disabled,
   and reveals render immediately.
 

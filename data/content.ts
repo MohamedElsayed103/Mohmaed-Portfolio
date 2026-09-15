@@ -10,7 +10,9 @@ export const profile = {
   githubHandle: "MohamedElsayed103",
   linkedin: "https://www.linkedin.com/in/mohamedelsyed/",
   linkedinHandle: "in/mohamedelsyed",
-  avatar: "https://avatars.githubusercontent.com/MohamedElsayed103?s=600",
+  avatar: "/mohamed-elsayed.jpg",
+  avatarWidth: 1000,
+  avatarHeight: 1250,
   cv: "/Mohamed-Elsayed-CV.pdf",
   positioning:
     "I build the layer users never see — multi-tenant backends in Java and Python, with the isolation, queues and APIs that keep them correct under load.",
