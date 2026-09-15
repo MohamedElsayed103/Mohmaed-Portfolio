@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { navLinks, profile } from "@/data/content";
 import { ScrollProgress } from "./ScrollProgress";
@@ -9,6 +9,8 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>("");
   const [open, setOpen] = useState(false);
+  // Section to scroll to once the mobile sheet has finished closing.
+  const [pendingHash, setPendingHash] = useState<string | null>(null);
   const reduce = useReducedMotion();
 
   useEffect(() => {
@@ -43,13 +45,53 @@ export function Nav() {
     return () => observer.disconnect();
   }, []);
 
-  // Lock the page while the mobile sheet is open.
+  /* No body scroll lock here on purpose: the sheet lives inside a fixed
+     header, so it stays put without one, and locking the body blocked
+     the browser's scroll-to-fragment. */
+
+  const scrollToHash = useCallback(
+    (href: string) => {
+      const target = document.querySelector<HTMLElement>(href);
+      if (!target) return false;
+      // scroll-margin-top on section[id] clears the fixed header.
+      target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      return true;
+    },
+    [reduce],
+  );
+
+  /* Tapping a link in the mobile sheet used to do nothing. Closing the
+     sheet cancels any scroll that is still in flight — the browser's
+     native fragment scroll and an explicit smooth scrollIntoView alike
+     — so the hash changed but the page never moved. The fix is to
+     sequence them: close the sheet, and only start scrolling once it
+     has actually finished exiting (see AnimatePresence below). */
+  const handleNavClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      if (!document.querySelector(href)) return; // let the browser try
+      e.preventDefault();
+      window.history.pushState(null, "", href);
+
+      if (open) {
+        setPendingHash(href);
+        setOpen(false);
+      } else {
+        scrollToHash(href);
+      }
+    },
+    [open, scrollToHash],
+  );
+
+  // We took over navigation, so back/forward has to scroll too.
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
+    const onPop = () => {
+      if (window.location.hash) scrollToHash(window.location.hash);
+      else window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
     };
-  }, [open]);
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [scrollToHash, reduce]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -68,6 +110,7 @@ export function Nav() {
       <nav className="shell flex h-16 items-center justify-between gap-6" aria-label="Primary">
         <a
           href="#top"
+          onClick={(e) => handleNavClick(e, "#top")}
           className="group flex items-baseline gap-2.5 font-semibold tracking-tight text-ink"
           aria-label={`${profile.name} — back to top`}
         >
@@ -85,6 +128,7 @@ export function Nav() {
               <li key={link.href} className="relative">
                 <a
                   href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   aria-current={isActive ? "true" : undefined}
                   className={[
                     "relative block rounded-md px-3 py-2 text-[0.9375rem] transition-colors duration-200",
@@ -141,7 +185,13 @@ export function Nav() {
 
       {scrolled ? <ScrollProgress /> : null}
 
-      <AnimatePresence>
+      <AnimatePresence
+        onExitComplete={() => {
+          if (!pendingHash) return;
+          scrollToHash(pendingHash);
+          setPendingHash(null);
+        }}
+      >
         {open ? (
           <motion.div
             id="mobile-nav"
@@ -156,7 +206,7 @@ export function Nav() {
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    onClick={() => setOpen(false)}
+                    onClick={(e) => handleNavClick(e, link.href)}
                     className="block border-b border-line-soft py-3.5 text-lg text-ink-dim transition-colors hover:text-ink"
                   >
                     {link.label}

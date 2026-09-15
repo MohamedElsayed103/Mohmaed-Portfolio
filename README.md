@@ -112,6 +112,13 @@ Worth knowing before changing things:
   change which logos appear or where they sit — the offsets are percentages, so they hold position
   as the frame scales. The hero section is `overflow-x-clip` so the glow can bleed without ever
   widening the page.
+- **Nav links scroll programmatically, not via the browser's fragment jump**
+  ([`components/Nav.tsx`](components/Nav.tsx)). Closing the mobile sheet cancels any scroll still
+  in flight — both the native hash scroll and an explicit smooth `scrollIntoView` — which left taps
+  doing nothing at all. The sheet now closes first and the scroll starts from
+  `AnimatePresence`'s `onExitComplete`, so the two never race. Don't reintroduce a
+  `body { overflow: hidden }` lock while the sheet is open either; that blocks the scroll for the
+  same reason, and the sheet sits in a fixed header so it does not need one.
 - **Reduced motion** is honoured throughout: animations collapse, smooth scrolling is disabled,
   and reveals render immediately.
 
