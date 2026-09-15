@@ -11,9 +11,8 @@ export function Skills() {
         <SectionHeading title="Stack" accent="var(--color-cyan)" note="colour = domain" />
 
         <Reveal>
-          <p className="mt-7 max-w-[58ch] text-lead text-ink-dim">
-            What I actually reach for. Colour marks the domain, so the same coding runs through
-            every project and role on this page.
+          <p className="mt-7 max-w-[52ch] text-lead text-ink-dim">
+            What I actually reach for. Colour marks the domain.
           </p>
         </Reveal>
 

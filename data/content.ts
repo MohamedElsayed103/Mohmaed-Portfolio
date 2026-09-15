@@ -15,13 +15,13 @@ export const profile = {
   avatarHeight: 1250,
   cv: "/Mohamed-Elsayed-CV.pdf",
   positioning:
-    "I build the layer users never see — multi-tenant backends in Java and Python, with the isolation, queues and APIs that keep them correct under load.",
+    "I build the layer users never see — multi-tenant backends in Java and Python that stay correct under load.",
 } as const;
 
 export const about = {
   paragraphs: [
-    "I studied Computer & Information Science at Ain Shams University, competed in ECPC, and took the ITI Full Stack Python track. Since then I have spent my time on one question: what makes a backend hold together when the requirements change underneath it.",
-    "Right now that means two systems at once — Django services for a Saudi Ministry of Foreign Affairs project at LightIdea, and a multi-tenant healthcare platform at White Matter where the hard part is isolation. Before that, Java and Spring Boot at Orange Innovation, which is where the habits came from.",
+    "Ain Shams CIS graduate, ECPC competitor, ITI Full Stack Python. Since then, one question: what makes a backend hold together when requirements change underneath it.",
+    "Today: Django services for a Saudi Ministry of Foreign Affairs project, and a healthcare platform where the hard part is isolation. Before that, Java and Spring Boot at Orange Innovation.",
   ],
   facts: [
     { label: "Based", value: "Cairo, Egypt", icon: "pin" },
@@ -48,10 +48,10 @@ export const experience: Role[] = [
     role: "Software Engineer",
     type: "Full-time",
     period: "Dec 2025 — Present",
-    summary: "Django services for a government programme, with the heavy work off the request path.",
+    summary: "Django services for a government programme.",
     bullets: [
-      "Moved long-running work onto Celery and RabbitMQ, so report generation and notification fan-out stopped blocking user-facing responses.",
-      "Designed and tuned the SQL schema and queries behind a Ministry of Foreign Affairs (Saudi Arabia) project, indexing against real access patterns rather than guesses.",
+      "Moved long-running work onto Celery and RabbitMQ, off the request path.",
+      "Designed and tuned the SQL behind a Saudi Ministry of Foreign Affairs project.",
     ],
     stack: ["Django", "Python", "Celery", "RabbitMQ", "PostgreSQL"],
     current: true,
@@ -61,12 +61,11 @@ export const experience: Role[] = [
     role: "Back-end Developer",
     type: "Part-time",
     period: "Dec 2025 — Present",
-    summary:
-      "A multi-tenant healthcare SaaS where isolation is the product requirement, not an implementation detail.",
+    summary: "Multi-tenant healthcare SaaS where isolation is the product requirement.",
     bullets: [
-      "Architected a schema-per-tenant platform as a modular monolith, with eighteen bounded modules each owning their own data.",
-      "Enforced tenant context through middleware and context managers, so cross-tenant leakage is prevented by construction rather than caught in review.",
-      "Wired Zero Trust access with Keycloak, JWT validation and RBAC, and connected bounded contexts over an event bus and message queue.",
+      "Schema-per-tenant modular monolith, eighteen bounded modules.",
+      "Middleware-enforced tenant context — cross-tenant leakage is impossible.",
+      "Zero Trust access with Keycloak, JWT and RBAC; contexts talk over an event bus.",
     ],
     stack: ["Django", "PostgreSQL", "Keycloak", "RabbitMQ", "MinIO", "Docker"],
     current: true,
@@ -78,8 +77,8 @@ export const experience: Role[] = [
     period: "Aug 2023 — Nov 2023",
     summary: "Where the Java habits came from.",
     bullets: [
-      "First real exposure to Spring Boot — REST APIs, dependency injection and MVC on production-shaped codebases.",
-      "Worked PostgreSQL through an ORM, and learned where that abstraction stops paying for itself.",
+      "Spring Boot, REST APIs and dependency injection on production-shaped codebases.",
+      "PostgreSQL through an ORM — and where that abstraction stops paying for itself.",
     ],
     stack: ["Java", "Spring Boot", "PostgreSQL", "Maven"],
   },
@@ -108,10 +107,10 @@ export const featured: Project[] = [
     kicker: "White Matter",
     year: "2026",
     summary:
-      "A production-shaped multi-tenant backend for clinics. Modular monolith, schema-per-tenant, eighteen bounded modules that each own their own data.",
+      "Multi-tenant clinic backend. Modular monolith, schema-per-tenant, eighteen bounded modules.",
     bullets: [
-      "Schema-per-tenant isolation with automatic tenant resolution — a request is structurally incapable of reading another clinic's records.",
-      "Keycloak-backed identity, Celery over RabbitMQ for async work, MinIO for object storage, behind a full Docker Compose topology.",
+      "A request is structurally incapable of reading another clinic's records.",
+      "Keycloak identity, Celery over RabbitMQ, MinIO storage, full Docker topology.",
     ],
     stack: ["Django", "PostgreSQL", "Keycloak", "Celery", "RabbitMQ", "MinIO", "Docker"],
     tags: ["Python"],
@@ -123,11 +122,10 @@ export const featured: Project[] = [
     name: "Reverie",
     kicker: "Wedding invitation SaaS",
     year: "2026",
-    summary:
-      "One deployment, many tenants. Couples are database rows, not new pages — publishing a site is a status flip, not a deploy.",
+    summary: "One deployment, many tenants. Couples are rows, not pages.",
     bullets: [
-      "A single catch-all route resolves any slug against Supabase and renders that couple's site from its row.",
-      "Lifecycle gating enforced server-side, so unlisted slugs return 404 even when the slug is guessed correctly.",
+      "One catch-all route renders any couple's site from its Supabase row.",
+      "Server-side lifecycle gating — unlisted slugs 404 even when guessed.",
     ],
     stack: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Vercel"],
     tags: ["Frontend"],
@@ -140,11 +138,10 @@ export const featured: Project[] = [
     name: "Use Case Diagram Generator",
     kicker: "Graduation project — graded A+",
     year: "2024",
-    summary:
-      "Written user stories in, UML use case diagrams out. A fine-tuned T5 transformer does the extraction; the web app does the drawing.",
+    summary: "User stories in, UML use case diagrams out.",
     bullets: [
-      "Fine-tuned a T5-base transformer to pull actors, use cases and their relationships out of free-text user stories.",
-      "Node.js backend turns the extracted model into an interactive diagram rendered in the browser.",
+      "Fine-tuned T5-base to extract actors, use cases and their relationships.",
+      "Node.js backend renders the model as an interactive diagram.",
     ],
     stack: ["Python", "T5", "Node.js", "JavaScript"],
     tags: ["Python", "AI"],
@@ -156,8 +153,7 @@ export const projects: Project[] = [
     slug: "book-store",
     name: "Online Book Store",
     year: "2024",
-    summary:
-      "Storefront and admin back office, with Builder, Strategy, Factory and Singleton doing real work rather than decorating the diagram.",
+    summary: "Storefront and admin back office. Builder, Strategy, Factory, Singleton.",
     stack: ["Java", "Spring Boot", "MySQL"],
     tags: ["Java"],
     repo: "https://github.com/MohamedElsayed103/Book-Store-Spring-Boot",
@@ -166,8 +162,7 @@ export const projects: Project[] = [
     slug: "cv-connect",
     name: "CV Connect",
     year: "2025",
-    summary:
-      "Template library for job seekers, plus an HR side that searches profiles by skill and filters on education and experience.",
+    summary: "CV templates for job seekers; profile search and filtering for HR.",
     stack: ["Java", "Spring Boot", "Spring Security"],
     tags: ["Java"],
     repo: "https://github.com/MohamedElsayed103/cv",
@@ -176,7 +171,7 @@ export const projects: Project[] = [
     slug: "university-management",
     name: "University Management System",
     year: "2024",
-    summary: "Admin, staff and student roles over a normalised academic schema.",
+    summary: "Role-based academic system over a normalised schema.",
     stack: ["Java", "Spring Boot", "JPA"],
     tags: ["Java"],
     repo: "https://github.com/MohamedElsayed103/university-management-system-springboot",
@@ -185,8 +180,7 @@ export const projects: Project[] = [
     slug: "school-api",
     name: "School REST API",
     year: "2025",
-    summary:
-      "Token-auth CRUD over students and teachers — register, login, refresh, and routes that reject an unauthenticated caller.",
+    summary: "JWT-auth CRUD over students and teachers, with refresh tokens.",
     stack: ["Django REST Framework", "SimpleJWT", "Python"],
     tags: ["Python"],
     repo: "https://github.com/MohamedElsayed103/simple_rest",
@@ -195,7 +189,7 @@ export const projects: Project[] = [
     slug: "django-redis",
     name: "Django + Redis",
     year: "2025",
-    summary: "Caching worked end to end: cache-aside reads, invalidation on write, sessions on Redis.",
+    summary: "Cache-aside reads, invalidation on write, sessions on Redis.",
     stack: ["Django", "Redis", "Python"],
     tags: ["Python"],
     repo: "https://github.com/MohamedElsayed103/django-redis",
@@ -204,7 +198,7 @@ export const projects: Project[] = [
     slug: "jenkins-pipeline",
     name: "Jenkins CI/CD Pipeline",
     year: "2025",
-    summary: "Containerised Java app wired into a Jenkins pipeline — build, test and deploy stages.",
+    summary: "Containerised Java app on a Jenkins build-test-deploy pipeline.",
     stack: ["Java", "Docker", "Jenkins"],
     tags: ["DevOps", "Java"],
     repo: "https://github.com/MohamedElsayed103/jenkins-task",
@@ -213,7 +207,7 @@ export const projects: Project[] = [
     slug: "react-dashboard",
     name: "React TypeScript Dashboard",
     year: "2025",
-    summary: "Protected routes, persistent auth and four data-backed panels coordinated through React Query.",
+    summary: "Protected routes, persistent auth, four panels on React Query.",
     stack: ["React", "TypeScript", "React Query", "Tailwind"],
     tags: ["Frontend"],
     repo: "https://github.com/MohamedElsayed103/React-ITI-project",
@@ -222,8 +216,7 @@ export const projects: Project[] = [
     slug: "ai-lab",
     name: "AI Lab",
     year: "2025",
-    summary:
-      "Vision chat, embeddings with semantic search, a RAG pipeline over user documents, and a fine-tuning workflow.",
+    summary: "Vision chat, semantic search, RAG over documents, fine-tuning.",
     stack: ["TypeScript", "Vite"],
     tags: ["AI", "Frontend"],
     repo: "https://github.com/MohamedElsayed103/AI-Lab2",
@@ -232,7 +225,7 @@ export const projects: Project[] = [
     slug: "brick-breaker",
     name: "Brick Breaker",
     year: "2024",
-    summary: "Collision detection, scoring and a game loop written from scratch in C++.",
+    summary: "Collision, scoring and a game loop from scratch in C++.",
     stack: ["C++"],
     tags: ["C++"],
     repo: "https://github.com/MohamedElsayed103/Brick-Breaker",
@@ -294,7 +287,7 @@ export const education = [
   },
   {
     credential: "Full Stack Using Python",
-    detail: "Nine-month professional diploma",
+    detail: "Nine-month diploma",
     place: "Information Technology Institute (ITI), Cairo",
     year: "2025",
   },
@@ -408,8 +401,8 @@ export function accentOf(name: string): string | undefined {
 
 /** Legend shown under the stack grid. */
 export const domainLegend: { domain: Domain; label: string; blurb: string }[] = [
-  { domain: "compiled", label: "Compiled", blurb: "Java, Spring, the JVM side" },
+  { domain: "compiled", label: "Compiled", blurb: "Java, Spring, JVM" },
   { domain: "python", label: "Python", blurb: "Django, DRF, Celery" },
-  { domain: "infra", label: "Infrastructure", blurb: "Data stores, queues, deployment" },
-  { domain: "frontend", label: "Frontend", blurb: "React, Next.js, TypeScript" },
+  { domain: "infra", label: "Infrastructure", blurb: "Stores, queues, deploys" },
+  { domain: "frontend", label: "Frontend", blurb: "React, Next.js, TS" },
 ];

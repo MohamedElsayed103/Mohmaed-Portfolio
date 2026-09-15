@@ -64,9 +64,8 @@ export function Contact() {
             <p className="max-w-[20ch] text-h1 font-bold text-ink">
               Have a backend that needs building?
             </p>
-            <p className="mt-5 max-w-[52ch] text-lead text-ink-dim">
-              I am open to backend roles, remote or on-site, and to contract work on Java or Python
-              systems.
+            <p className="mt-5 max-w-[44ch] text-lead text-ink-dim">
+              Open to backend roles and contract work on Java or Python systems.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
