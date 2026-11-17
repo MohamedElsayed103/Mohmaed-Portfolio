@@ -1,110 +1,105 @@
-import { Reveal } from "./Reveal";
-import { PortraitFrame } from "./PortraitFrame";
-import { Marquee } from "./ui/Marquee";
-import { WordReveal } from "./ui/WordReveal";
-import { Magnetic } from "./ui/Magnetic";
-import { profile, techStack } from "@/data/content";
-import { ArrowDown, ArrowUpRight, Download, GitHub, LinkedIn, Mail } from "./icons";
+import { profile } from "@/data/content";
+import { PlatformLive } from "./hero/PlatformLive";
+import { ArrowDown, Download, GitHub, LinkedIn, Mail } from "./icons";
+import s from "./hero/hero.module.css";
 
-const SOCIALS = [
-  { key: "github", Icon: GitHub, accent: "var(--color-vermilion)" },
-  { key: "linkedin", Icon: LinkedIn, accent: "var(--color-cyan)" },
-  { key: "email", Icon: Mail, accent: "var(--color-amber)" },
-] as const;
+/* The hero shows the system instead of a portrait: a live diagram of the
+   healthcare platform's request path. Typography anchors the left, the diagram
+   owns the right. The tech marquee was dropped on purpose: the diagram already
+   names the stack, the Stack section shows it in full, and a second moving strip
+   under moving packets competed for the eye. */
+
+const delay = (ms: number) => ({ animationDelay: `${ms}ms` });
 
 export function Hero() {
+  const words = profile.name.split(" ");
   const links = [
-    { ...SOCIALS[0], href: profile.github, label: profile.githubHandle, external: true },
-    { ...SOCIALS[1], href: profile.linkedin, label: profile.linkedinHandle, external: true },
-    { ...SOCIALS[2], href: `mailto:${profile.email}`, label: "Email", external: false },
+    { href: profile.github, label: "GitHub", Icon: GitHub, external: true },
+    { href: profile.linkedin, label: "LinkedIn", Icon: LinkedIn, external: true },
+    { href: `mailto:${profile.email}`, label: "Email", Icon: Mail, external: false },
   ];
 
-  // overflow-x-clip keeps the portrait glow from widening the page.
   return (
-    <section id="top" className="overflow-x-clip pt-24 pb-12 sm:pt-32 lg:pt-36 lg:pb-16">
-      <div className="shell">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-16">
-          <div className="order-1 lg:order-2 lg:justify-self-end">
-            <PortraitFrame />
-          </div>
+    <section
+      id="top"
+      data-theme="dark"
+      className="relative flex min-h-[100svh] flex-col justify-center overflow-x-clip pt-[5.25rem] pb-14 sm:pt-28 lg:pt-24 lg:pb-16"
+    >
+      <div className="shell grid items-center gap-x-8 gap-y-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] xl:gap-x-16">
+        <div>
+          <p
+            className={`${s.follow} inline-flex min-h-8 items-center gap-2.5 rounded-full border border-[var(--s-rule)] px-3 text-[0.875rem] text-[var(--s-body)]`}
+            style={delay(0)}
+          >
+            <span className={s.lamp} aria-hidden="true" />
+            {profile.availability}
+          </p>
 
-          <div className="order-2 lg:order-1">
-            <Reveal delay={60}>
-              <p className="data flex items-center gap-2.5">
-                <span className="relative flex h-2 w-2 shrink-0" aria-hidden="true">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-60" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-signal" />
+          <h1 className="mt-5 text-[clamp(3.25rem,16.5vw,6rem)] leading-[0.92] font-black tracking-[-0.03em] text-[var(--s-fg)] lg:text-[min(5.75rem,6vw)]">
+            {words.map((w, i) => (
+              <span key={w} className={s.mask}>
+                <span className={s.rise} style={delay(80 + i * 90)}>
+                  {w}
                 </span>
-                <span className="text-ink-mute">{profile.availability}</span>
-              </p>
-            </Reveal>
+                {i < words.length - 1 ? " " : null}
+              </span>
+            ))}
+          </h1>
 
-            <h1 className="mt-5 text-display font-black text-ink">
-              <WordReveal text="Mohamed" delay={120} step={80} className="block" />
-              <WordReveal text="Elsayed" delay={220} step={80} className="block" />
-            </h1>
+          <p className={`${s.follow} mt-4 text-[1rem] text-[var(--s-muted)]`} style={delay(360)}>
+            {profile.role}
+            <span aria-hidden="true" className="mx-2.5 text-[var(--s-rule)]">
+              /
+            </span>
+            {profile.location}
+          </p>
 
-            <Reveal delay={420}>
-              <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-h3 font-medium">
-                <span className="text-signal">{profile.role}</span>
-                <span className="h-4 w-px bg-line" aria-hidden="true" />
-                <span className="text-ink-mute">{profile.location}</span>
-              </p>
-            </Reveal>
+          <p
+            className={`${s.follow} mt-5 max-w-[34ch] text-lead text-[var(--s-body)] lg:mt-7`}
+            style={delay(440)}
+          >
+            {profile.positioning}
+          </p>
 
-            <Reveal delay={490}>
-              <p className="mt-6 max-w-[56ch] text-lead text-ink-dim">{profile.positioning}</p>
-            </Reveal>
-
-            <Reveal delay={560}>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Magnetic>
-                  <a
-                    href="#work"
-                    className="group inline-flex items-center gap-2 rounded-md bg-signal px-5 py-3 font-semibold text-bg-sunken transition-colors duration-200 hover:bg-signal-hot"
-                  >
-                    See my work
-                    <ArrowDown className="transition-transform duration-400 ease-[var(--ease-quart)] group-hover:translate-y-0.5" />
-                  </a>
-                </Magnetic>
-                <Magnetic>
-                  <a
-                    href={profile.cv}
-                    download
-                    className="inline-flex items-center gap-2 rounded-md border border-line px-5 py-3 font-medium text-ink-dim transition-colors duration-200 hover:border-line-strong hover:text-ink"
-                  >
-                    <Download />
-                    Download CV
-                  </a>
-                </Magnetic>
-              </div>
-            </Reveal>
-
-            <Reveal delay={630}>
-              <ul className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-                {links.map(({ href, label, Icon, accent, external, key }) => (
-                  <li key={key} style={{ ["--accent" as string]: accent }}>
-                    <a
-                      href={href}
-                      target={external ? "_blank" : undefined}
-                      rel="noreferrer noopener"
-                      className="group inline-flex items-center gap-2 text-[0.9375rem] text-ink-mute transition-colors duration-200 hover:text-ink"
-                    >
-                      <Icon className="text-ink-faint transition-colors duration-300 group-hover:[color:var(--accent)]" />
-                      <span className="font-mono text-data">{label}</span>
-                      <ArrowUpRight className="opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+          <div className={`${s.follow} mt-7 flex flex-wrap items-center gap-2 sm:gap-3`} style={delay(520)}>
+            <a
+              href="#work"
+              className="group inline-flex min-h-12 items-center gap-2 rounded-md bg-[var(--s-signal)] px-4 text-[0.9375rem] font-semibold sm:px-5 sm:text-base text-[var(--s-on-signal)] transition-colors duration-200 hover:bg-signal-hot"
+            >
+              See my work
+              <ArrowDown className="transition-transform duration-300 ease-[var(--ease-quart)] group-hover:translate-y-0.5" />
+            </a>
+            <a
+              href={profile.cv}
+              download
+              className="inline-flex min-h-12 items-center gap-2 rounded-md border border-[var(--s-rule)] px-4 text-[0.9375rem] font-medium sm:px-5 sm:text-base text-[var(--s-fg)] transition-colors duration-200 hover:border-[color-mix(in_oklab,var(--s-fg)_55%,transparent)]"
+            >
+              <Download />
+              Download CV
+            </a>
           </div>
+
+          <ul className={`${s.follow} mt-5 flex flex-wrap items-center gap-x-5`} style={delay(600)}>
+            {links.map(({ href, label, Icon, external }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  target={external ? "_blank" : undefined}
+                  rel={external ? "noreferrer noopener" : undefined}
+                  className="inline-flex min-h-11 items-center gap-2 text-[0.9375rem] text-[var(--s-muted)] transition-colors duration-200 hover:text-[var(--s-fg)]"
+                >
+                  <Icon />
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="lg:-mr-5 xl:mr-0">
+          <PlatformLive />
         </div>
       </div>
-
-      <Reveal delay={700} className="mt-14 lg:mt-20">
-        <Marquee items={techStack.map((t) => t.name)} />
-      </Reveal>
     </section>
   );
 }

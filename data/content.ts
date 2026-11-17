@@ -96,8 +96,6 @@ export type Project = {
   repo?: string;
   live?: string;
   liveLabel?: string;
-  /** Renders the architecture schematic alongside this project. */
-  schematic?: boolean;
 };
 
 export const featured: Project[] = [
@@ -115,7 +113,6 @@ export const featured: Project[] = [
     stack: ["Django", "PostgreSQL", "Keycloak", "Celery", "RabbitMQ", "MinIO", "Docker"],
     tags: ["Python"],
     repo: "https://github.com/MohamedElsayed103/medical",
-    schematic: true,
   },
   {
     slug: "reverie",
@@ -406,3 +403,91 @@ export const domainLegend: { domain: Domain; label: string; blurb: string }[] = 
   { domain: "infra", label: "Infrastructure", blurb: "Stores, queues, deploys" },
   { domain: "frontend", label: "Frontend", blurb: "React, Next.js, TS" },
 ];
+
+/* ── Diagram data ─────────────────────────────────────────────
+   Every working diagram on the page reads from here. Each fact below
+   restates something already said in the copy above; nothing new is
+   claimed. Names marked "example" are illustrative demo values. */
+
+/** One-line statement for the About section's scroll-fill. */
+export const statement =
+  "I build the layer users never see. Backends in Java and Python where a request can only reach the data it is allowed to, slow work leaves the request path, and the code still holds when the requirements move underneath it.";
+
+/** Request path through the Healthcare SaaS platform (hero + project). */
+export const platform = {
+  nodes: [
+    { id: "client", label: "client", sub: "browser", domain: undefined },
+    { id: "api", label: "api", sub: "Django", domain: "python" },
+    { id: "keycloak", label: "Keycloak", sub: "JWT · RBAC", domain: "infra" },
+    { id: "tenant", label: "tenant context", sub: "middleware", domain: "python" },
+    { id: "domain", label: "domain modules", sub: "18 bounded", domain: "python" },
+    { id: "postgres", label: "PostgreSQL", sub: "schema per tenant", domain: "infra" },
+    { id: "rabbitmq", label: "RabbitMQ", sub: "event bus", domain: "infra" },
+    { id: "celery", label: "Celery", sub: "workers", domain: "python" },
+    { id: "minio", label: "MinIO", sub: "objects", domain: "infra" },
+  ],
+  edges: [
+    { from: "client", to: "api", label: "request" },
+    { from: "api", to: "keycloak", label: "verify JWT" },
+    { from: "api", to: "tenant", label: "resolve tenant" },
+    { from: "tenant", to: "domain", label: "scoped call" },
+    { from: "domain", to: "postgres", label: "query" },
+    { from: "domain", to: "rabbitmq", label: "publish event", async: true },
+    { from: "rabbitmq", to: "celery", label: "consume", async: true },
+    { from: "celery", to: "minio", label: "store", async: true },
+  ],
+} as const;
+
+/** Tenant-isolation demo for the Healthcare SaaS project. Tenant names are examples. */
+export const isolation = {
+  tenants: [
+    { id: "clinic_a", label: "Clinic A", schema: "tenant_clinic_a" },
+    { id: "clinic_b", label: "Clinic B", schema: "tenant_clinic_b" },
+    { id: "clinic_c", label: "Clinic C", schema: "tenant_clinic_c" },
+  ],
+  /** What each step does, in order. Mirrors the bullets in `featured`. */
+  steps: [
+    { id: "auth", label: "Keycloak", note: "JWT verified, role checked" },
+    { id: "middleware", label: "Tenant middleware", note: "tenant taken from the token, not the request" },
+    { id: "schema", label: "PostgreSQL", note: "query runs inside that tenant's schema only" },
+  ],
+  rejection: "403  tenant mismatch: request stopped in middleware",
+};
+
+/** Reverie routing demo. Slugs are examples. */
+export const reverieRouting = {
+  route: "app/[slug]/page.tsx",
+  slugs: [
+    { slug: "layla-and-omar", state: "published", result: "200  renders the couple's site from its row" },
+    { slug: "nour-and-karim", state: "unlisted", result: "404  unlisted, even when the slug is guessed" },
+    { slug: "no-such-couple", state: "missing", result: "404  no row" },
+  ],
+};
+
+/** Use Case Diagram Generator demo. The story and its extraction are examples. */
+export const useCaseDemo = {
+  story: "As a patient, I want to book an appointment so that a doctor can review my case.",
+  model: "T5-base, fine-tuned",
+  actors: ["Patient", "Doctor"],
+  useCases: ["Book appointment", "Review case"],
+  relations: [
+    { actor: "Patient", useCase: "Book appointment" },
+    { actor: "Doctor", useCase: "Review case" },
+  ],
+};
+
+/** Career as a state machine (oldest first). Two current roles run in parallel. */
+export const career = {
+  states: [
+    { id: "orange", state: "INTERN", event: "HIRED", company: "Orange Innovation Egypt", period: "Aug 2023 — Nov 2023" },
+    { id: "ainshams", state: "GRADUATE", event: "GRADUATED", company: "Ain Shams University", period: "2024" },
+    { id: "iti", state: "ITI_DIPLOMA", event: "ENROLLED", company: "Information Technology Institute", period: "2025" },
+  ],
+  /** Fork: both run at once. */
+  parallel: [
+    { id: "lightidea", state: "ENGINEER", company: "LightIdea IT Consultancy", period: "Dec 2025 — Present" },
+    { id: "whitematter", state: "BACKEND_DEV", company: "White Matter", period: "Dec 2025 — Present" },
+  ],
+  forkEvent: "OFFERS_ACCEPTED",
+  next: { state: "NEXT_ROLE", event: "YOUR_MESSAGE" },
+};

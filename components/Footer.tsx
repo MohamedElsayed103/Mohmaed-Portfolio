@@ -1,21 +1,29 @@
 import { profile } from "@/data/content";
-import { ArrowDown } from "./icons";
+import { BackToTop } from "./contact/BackToTop";
+import { Lamp } from "./contact/Lamp";
 
 export function Footer() {
   return (
-    <footer className="border-t border-line-soft">
-      <div className="shell flex flex-wrap items-center justify-between gap-x-8 gap-y-4 py-9">
-        <p className="data text-ink-faint">
-          © {new Date().getFullYear()} {profile.name} · Built with Next.js and Tailwind CSS
+    <footer data-theme="dark" className="border-t border-[var(--s-rule)]">
+      <div className="shell grid gap-y-4 py-8 text-[0.9375rem] text-[var(--s-muted)] sm:py-10 lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-x-8">
+        <p>
+          <span className="text-[var(--s-fg)]">© 2026 {profile.name}</span>
+          <span aria-hidden="true"> · </span>
+          <span className="sr-only">, </span>
+          {profile.location}
         </p>
 
-        <a
-          href="#top"
-          className="group inline-flex items-center gap-2 font-mono text-data text-ink-mute transition-colors duration-200 hover:text-ink"
-        >
-          <ArrowDown className="rotate-180 transition-transform duration-400 ease-[var(--ease-quart)] group-hover:-translate-y-0.5" />
-          Back to top
-        </a>
+        <p className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-data lg:justify-center">
+          <span>GET /api/health</span>
+          <span className="inline-flex items-center gap-2 text-[var(--s-fg)]">
+            {'{"status":"ok"}'}
+            <Lamp color="var(--s-infra)" />
+          </span>
+        </p>
+
+        <div className="lg:justify-self-end">
+          <BackToTop className="text-[var(--s-fg)] transition-colors duration-200 hover:text-[var(--s-signal)]" />
+        </div>
       </div>
     </footer>
   );

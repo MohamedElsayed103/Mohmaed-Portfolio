@@ -1,77 +1,65 @@
 import { Reveal } from "./Reveal";
-import { SectionHeading } from "./SectionHeading";
-import { about, domainAccent, education, profile } from "@/data/content";
-import { Cap, Globe, MapPin, Server } from "./icons";
-
-const FACT_ICONS = { pin: MapPin, server: Server, cap: Cap, globe: Globe } as const;
-
-const FACT_ACCENTS = [
-  domainAccent.compiled,
-  domainAccent.python,
-  domainAccent.infra,
-  domainAccent.frontend,
-];
+import { StatementFill } from "./about/StatementFill";
+import { Portrait } from "./about/Portrait";
+import { about, education, statement } from "@/data/content";
 
 export function About() {
   return (
-    <section id="about" className="border-t border-line-soft py-16 sm:py-24">
+    <section id="about" data-theme="light" aria-labelledby="about-title" className="py-28 sm:py-40">
       <div className="shell">
-        <SectionHeading title="About" accent="var(--color-violet)" note={profile.location} />
+        <StatementFill text={statement} headingId="about-title" />
 
-        <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.9fr)] lg:gap-20">
-          <Reveal>
-            <div className="space-y-5">
+        <div className="mt-20 grid gap-y-16 sm:mt-28 lg:grid-cols-12 lg:gap-x-8">
+          <div className="lg:col-span-4">
+            <Portrait className="mx-auto w-full max-w-[22rem] sm:mx-0 lg:sticky lg:top-28 lg:max-w-none" />
+          </div>
+
+          <div className="lg:col-span-7 lg:col-start-6">
+            <Reveal className="max-w-[65ch] space-y-5 text-[1.0625rem] leading-[1.75] sm:text-lg">
               {about.paragraphs.map((p, i) => (
-                <p
-                  key={i}
-                  className={
-                    i === 0
-                      ? "max-w-[62ch] text-lead text-ink"
-                      : "max-w-[64ch] text-[1.0625rem] leading-[1.75] text-ink-mute"
-                  }
-                >
+                <p key={i} className={i === 0 ? "text-[var(--s-fg)]" : "text-[var(--s-body)]"}>
                   {p}
                 </p>
               ))}
-            </div>
+            </Reveal>
 
-            <ul className="mt-9 grid gap-x-8 gap-y-4 sm:grid-cols-2">
-              {about.facts.map((f, i) => {
-                const Icon = FACT_ICONS[f.icon as keyof typeof FACT_ICONS];
-                return (
-                  <li key={f.label} className="flex items-start gap-3">
-                    <Icon
-                      className="mt-0.5 shrink-0"
-                      style={{ color: FACT_ACCENTS[i % FACT_ACCENTS.length] }}
-                    />
-                    <span>
-                      <span className="data block text-ink-faint">{f.label}</span>
-                      <span className="text-[0.9375rem] text-ink-dim">{f.value}</span>
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-          </Reveal>
-
-          <Reveal delay={80}>
-            <h3 className="border-t border-line pt-5 font-semibold text-ink">Education</h3>
-            <ul className="mt-6 space-y-7">
-              {education.map((e) => (
-                <li key={e.credential} className="flex gap-3.5">
-                  <Cap className="mt-1 shrink-0" style={{ color: "var(--color-violet)" }} />
-                  <div>
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                      <p className="font-medium text-ink">{e.credential}</p>
-                      <span className="data shrink-0" style={{ color: "var(--color-violet)" }}>{e.year}</span>
-                    </div>
-                    <p className="mt-1 text-[0.9375rem] text-ink-mute">{e.place}</p>
-                    <p className="data mt-0.5 text-ink-faint">{e.detail}</p>
+            <Reveal delay={60}>
+              <dl className="mt-14 border-b border-[var(--s-rule)]">
+                {about.facts.map((f) => (
+                  <div
+                    key={f.label}
+                    className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-6 border-t border-[var(--s-rule)] py-4 sm:grid-cols-[9rem_minmax(0,1fr)]"
+                  >
+                    <dt className="text-[0.9375rem] text-[var(--s-muted)]">{f.label}</dt>
+                    <dd className="text-[1.0625rem] font-medium text-[var(--s-fg)]">{f.value}</dd>
                   </div>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
+                ))}
+              </dl>
+            </Reveal>
+
+            <Reveal delay={60} className="mt-16">
+              <h3 className="text-[1.0625rem] font-semibold text-[var(--s-fg)]">Education</h3>
+              <ol className="mt-4 border-b border-[var(--s-rule)]">
+                {education.map((e) => (
+                  <li
+                    key={e.credential}
+                    className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-6 border-t border-[var(--s-rule)] py-5"
+                  >
+                    <div>
+                      <p className="text-[1.0625rem] leading-snug font-medium text-[var(--s-fg)]">{e.credential}</p>
+                      <p className="mt-1 text-[0.9375rem] leading-relaxed text-[var(--s-muted)]">
+                        {e.detail}
+                        <span aria-hidden="true"> · </span>
+                        <span className="sr-only">, </span>
+                        {e.place}
+                      </p>
+                    </div>
+                    <span className="pt-0.5 font-mono text-data text-[var(--s-body)] tabular-nums">{e.year}</span>
+                  </li>
+                ))}
+              </ol>
+            </Reveal>
+          </div>
         </div>
       </div>
     </section>

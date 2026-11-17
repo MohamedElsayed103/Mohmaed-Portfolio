@@ -2,13 +2,13 @@ import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { Work } from "@/components/Work";
 import { Experience } from "@/components/Experience";
-import { Skills } from "@/components/Skills";
+import { Stack } from "@/components/Stack";
 import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { experience, profile, techStack } from "@/data/content";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mohamed-elsayed.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mohmaed-portfolio.vercel.app";
 
 /** JSON-LD so recruiters searching by name get a structured result. */
 const personSchema = {
@@ -37,11 +37,11 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
       />
       <Nav />
-      <main>
+      <main id="main">
         <Hero />
         <Work />
         <Experience />
-        <Skills />
+        <Stack />
         <About />
         <Contact />
       </main>

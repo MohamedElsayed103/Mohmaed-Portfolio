@@ -2,8 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Schibsted_Grotesk, Geist_Mono } from "next/font/google";
 import { profile } from "@/data/content";
 import { Aurora } from "@/components/ui/Aurora";
-import { Curtain } from "@/components/ui/Curtain";
-import { Cursor } from "@/components/ui/Cursor";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
 
 const schibsted = Schibsted_Grotesk({
@@ -25,7 +24,7 @@ const description =
 
 /* Set NEXT_PUBLIC_SITE_URL in the host's env once the domain is live —
    canonical and social-card URLs resolve against it. */
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mohamed-elsayed.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mohmaed-portfolio.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -81,14 +80,13 @@ export default function RootLayout({
     <html lang="en" className={`${schibsted.variable} ${geistMono.variable}`}>
       <body className="bg-bg text-ink-dim antialiased">
         <a
-          href="#work"
+          href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-signal focus:px-4 focus:py-2 focus:font-medium focus:text-bg-sunken"
         >
           Skip to content
         </a>
         <Aurora />
-        <Curtain />
-        <Cursor />
+        <SmoothScroll />
         {children}
       </body>
     </html>

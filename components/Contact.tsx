@@ -1,131 +1,85 @@
-"use client";
-
-import { useState } from "react";
+import { profile } from "@/data/content";
+import { ArrowDown, ArrowUpRight } from "./icons";
 import { Reveal } from "./Reveal";
-import { SectionHeading } from "./SectionHeading";
-import { domainAccent, profile } from "@/data/content";
-import { ArrowUpRight, Check, Copy, Download, GitHub, LinkedIn, Mail, MapPin, Phone } from "./icons";
+import { ContactHero } from "./contact/ContactHero";
+import { PendingTransition } from "./contact/PendingTransition";
+import styles from "./contact/contact.module.css";
+
+type Channel = {
+  label: string;
+  meta: string;
+  href: string;
+  kind: "external" | "local" | "download";
+};
+
+const channels: Channel[] = [
+  { label: "GitHub", meta: profile.githubHandle, href: profile.github, kind: "external" },
+  { label: "LinkedIn", meta: profile.linkedinHandle, href: profile.linkedin, kind: "external" },
+  { label: "Phone", meta: profile.phone, href: profile.phoneHref, kind: "local" },
+  { label: "Download CV", meta: "PDF", href: profile.cv, kind: "download" },
+];
+
+const travel = "absolute inset-0 transition-transform duration-500 ease-[var(--ease-expo)]";
+
+function TravelArrow({ kind }: { kind: Channel["kind"] }) {
+  if (kind === "download") {
+    return (
+      <span aria-hidden="true" className="relative block size-4 shrink-0 overflow-hidden">
+        <ArrowDown size={16} className={`${travel} group-hover:translate-y-full`} />
+        <ArrowDown size={16} className={`${travel} -translate-y-full group-hover:translate-y-0`} />
+      </span>
+    );
+  }
+  return (
+    <span aria-hidden="true" className="relative block size-4 shrink-0 overflow-hidden">
+      <ArrowUpRight size={16} className={`${travel} group-hover:translate-x-full group-hover:-translate-y-full`} />
+      <ArrowUpRight size={16} className={`${travel} -translate-x-full translate-y-full group-hover:translate-x-0 group-hover:translate-y-0`} />
+    </span>
+  );
+}
 
 export function Contact() {
-  const [copied, setCopied] = useState(false);
-
-  async function copyEmail() {
-    try {
-      await navigator.clipboard.writeText(profile.email);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Clipboard blocked (insecure context or denied) — the mailto
-      // link beside this button still works.
-      setCopied(false);
-    }
-  }
-
-  const links = [
-    {
-      href: `mailto:${profile.email}`,
-      Icon: Mail,
-      label: profile.email,
-      meta: "email",
-      accent: domainAccent.compiled,
-    },
-    {
-      href: profile.phoneHref,
-      Icon: Phone,
-      label: profile.phone,
-      meta: "phone / WhatsApp",
-      accent: domainAccent.python,
-    },
-    {
-      href: profile.github,
-      Icon: GitHub,
-      label: profile.githubHandle,
-      meta: "github",
-      external: true,
-      accent: domainAccent.infra,
-    },
-    {
-      href: profile.linkedin,
-      Icon: LinkedIn,
-      label: profile.linkedinHandle,
-      meta: "linkedin",
-      external: true,
-      accent: domainAccent.frontend,
-    },
-  ];
-
   return (
-    <section id="contact" className="border-t border-line-soft py-16 sm:py-24">
+    <section
+      id="contact"
+      data-theme="dark"
+      aria-labelledby="contact-title"
+      className={`${styles.contact} overflow-x-clip py-28 sm:py-40`}
+    >
       <div className="shell">
-        <SectionHeading title="Get in touch" accent="var(--color-signal)" note="usually replies within a day" />
+        <PendingTransition />
 
-        <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
-          <Reveal>
-            <p className="max-w-[20ch] text-h1 font-bold text-ink">
-              Have a backend that needs building?
-            </p>
-            <p className="mt-5 max-w-[44ch] text-lead text-ink-dim">
-              Open to backend roles and contract work on Java or Python systems.
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <a
-                href={`mailto:${profile.email}`}
-                className="inline-flex items-center gap-2 rounded-md bg-signal px-5 py-3 font-semibold text-bg-sunken transition-colors duration-200 hover:bg-signal-hot"
-              >
-                <Mail />
-                Email me
-              </a>
-              <a
-                href={profile.cv}
-                download
-                className="inline-flex items-center gap-2 rounded-md border border-line px-5 py-3 font-medium text-ink-dim transition-colors duration-200 hover:border-line-strong hover:text-ink"
-              >
-                <Download />
-                Download CV
-              </a>
-            </div>
-          </Reveal>
-
-          <Reveal delay={90}>
-            <ul className="border-t border-line">
-              {links.map(({ href, Icon, label, meta, external, accent }) => (
-                <li key={meta} className="border-b border-line-soft" style={{ ["--accent" as string]: accent }}>
-                  <a
-                    href={href}
-                    {...(external ? { target: "_blank", rel: "noreferrer noopener" } : {})}
-                    className="group flex items-center gap-3.5 py-4 text-ink-dim transition-colors duration-200 hover:text-ink"
-                  >
-                    <Icon className="shrink-0 text-ink-faint transition-colors duration-300 group-hover:[color:var(--accent)]" />
-                    <span className="min-w-0 flex-1">
-                      <span className="data block text-ink-faint">{meta}</span>
-                      <span className="block truncate font-mono text-[0.9375rem]">{label}</span>
-                    </span>
-                    {external ? (
-                      <ArrowUpRight className="shrink-0 text-ink-faint opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-                    ) : null}
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-3">
-              <span className="inline-flex items-center gap-2 text-[0.9375rem] text-ink-mute">
-                <MapPin className="text-ink-faint" />
-                {profile.location}
-                <span className="data text-ink-faint">GMT+2</span>
-              </span>
-              <button
-                type="button"
-                onClick={copyEmail}
-                className="inline-flex items-center gap-1.5 rounded-md border border-line px-2.5 py-1.5 font-mono text-[0.6875rem] text-ink-mute transition-colors duration-200 hover:border-line-strong hover:text-ink"
-              >
-                {copied ? <Check size={12} /> : <Copy size={12} />}
-                {copied ? "email copied" : "copy email"}
-              </button>
-            </div>
-          </Reveal>
+        <div className="mt-14 sm:mt-20">
+          <ContactHero />
         </div>
+
+        <Reveal as="ul" className="mt-20 grid sm:mt-28 sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-4">
+          {channels.map((c) => (
+            <li key={c.label} className="border-t border-[var(--s-rule)]">
+              <a
+                href={c.href}
+                {...(c.kind === "external" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                {...(c.kind === "download" ? { download: "" } : {})}
+                className="group flex min-h-11 items-start justify-between gap-4 pt-5 pb-8"
+              >
+                <span className="min-w-0">
+                  <span className="relative inline-block text-h3 font-semibold text-[var(--s-fg)]">
+                    {c.label}
+                    <span
+                      aria-hidden="true"
+                      className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-500 ease-[var(--ease-expo)] group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                    />
+                  </span>
+                  <span className="mt-1.5 block font-mono text-data break-all text-[var(--s-muted)]">{c.meta}</span>
+                  {c.kind === "external" ? <span className="sr-only"> (opens in a new tab)</span> : null}
+                </span>
+                <span className="mt-2 text-[var(--s-muted)] transition-colors duration-300 group-hover:text-[var(--s-signal)]">
+                  <TravelArrow kind={c.kind} />
+                </span>
+              </a>
+            </li>
+          ))}
+        </Reveal>
       </div>
     </section>
   );

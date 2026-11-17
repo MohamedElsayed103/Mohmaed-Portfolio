@@ -1,6 +1,6 @@
 # Mohamed Elsayed — Portfolio
 
-Personal portfolio site. Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · Motion.
+Personal portfolio site. Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · GSAP + Lenis · Motion.
 
 ## Run it
 
@@ -24,10 +24,16 @@ only file you need to edit to keep the site current — nothing is hardcoded in 
 | `featured` | The three in-depth project write-ups |
 | `projects` | The repository index table |
 | `projectTags` | Filter chips. A tag with zero matches hides itself |
-| `techStack` | The logo grid. `core: true` highlights a tile |
-| `concepts` | Text chips for skills that have no brand logo |
+| `techStack` | The stack strata. `core: true` sets a technology in heavy type |
+| `concepts` | The bedrock layer of the stack strata |
 | `TECH_DOMAIN` / `TAG_DOMAIN` | Which accent colour each technology and tag gets |
-| `education` | The list beside the About copy |
+| `education` | The list beside the About copy, and two states in the experience machine |
+| `statement` | The scroll-filled statement in About |
+| `platform` | The live request-path diagram in the hero |
+| `isolation` | The tenant-isolation demo in the Healthcare project |
+| `reverieRouting` | The routing demo in the Reverie project |
+| `useCaseDemo` | The user-story-to-UML demo in the Use Case project |
+| `career` | The experience state machine (states, events, the parallel fork) |
 | `navLinks` | Nav items — each `href` must match a `<section id="...">` |
 
 ### Adding a project
@@ -46,8 +52,9 @@ Append an entry to `projects` in `data/content.ts`:
 }
 ```
 
-To promote one to a featured write-up, move it into `featured` and add `bullets: [...]`. Set
-`schematic: true` on exactly one featured project to render the architecture diagram beside it.
+The three featured projects each have a hand-built interactive section
+(`components/ProjectHealthcare.tsx`, `ProjectReverie.tsx`, `ProjectUseCase.tsx`) that reads
+`featured[0..2]` plus its own diagram data, so promoting a different project means building it a section.
 
 ### Tech logos
 
@@ -88,57 +95,30 @@ The whole page is statically prerendered, so it serves from the CDN with no serv
 
 ## Design notes
 
-Worth knowing before changing things:
+The full design contract is in [`DESIGN.md`](DESIGN.md). Worth knowing before changing things:
 
-- **Colour is semantic, not decorative.** Four accents each stand for a domain — vermilion for
+- **The system is the portfolio.** Every visual is a working model of real backend behaviour:
+  live traffic through the healthcare platform in the hero, a cross-tenant request rejected at the
+  middleware, an unlisted slug that 404s, a user story becoming a UML diagram, and a career drawn as
+  a state machine with two parallel states. All diagram data lives in `data/content.ts`.
+- **Colour is semantic, not decorative.** Four accents each stand for a domain: vermilion for
   compiled/JVM work, amber for Python, cyan for data and infrastructure, violet for frontend. The
-  same coding runs through stack tiles, project tags, timeline dots, filter pills and the marquee,
-  so a glance tells you what kind of work a project is. The mapping lives in `TECH_DOMAIN` and
-  `TAG_DOMAIN` in [`data/content.ts`](data/content.ts); `accentOf(name)` resolves it. Anything
-  unmapped falls back to neutral ink rather than guessing a colour.
-- **Surfaces stay achromatic** (chroma `0`) so the accents do all the work. Contrast was measured
-  against the *rendered* page, aurora included, not just the token values — the worst-case
-  background pixel is `#231d11`, against which body text holds 5.51:1 and every accent clears
-  4.5:1. If you make the aurora stronger, re-measure; it lifts the background behind text.
-- **The aurora** ([`components/ui/Aurora.tsx`](components/ui/Aurora.tsx)) is four blurred pools of
-  the palette on a fixed layer at 10% opacity. Keep them spread apart — overlapping cyan and amber
-  turns muddy green.
-- **Filled accent buttons use dark text** (`text-bg-sunken`). White on vermilion is 2.97:1 and
-  fails contrast — do not switch it.
-- **Scroll reveals are visible by default.** The hidden from-state is gated on the CSS
-  `@media (scripting: enabled)` feature, so JS-off, a headless render, or an older browser that
-  does not know the feature all still show every section. Gating in CSS rather than by scripting a
-  class onto `<html>` also keeps the SSR markup identical to the hydrated DOM — doing the latter
-  causes a React hydration mismatch. Reveals use a CSS *animation*, not a transition, so one cannot
-  stall half-faded in a background tab.
-- **The architecture schematic** (`components/SystemTrace.tsx`) is plain SVG, shown beside the
-  Healthcare SaaS project it actually describes. Connectors carry `pathLength="100"`, so one dash
-  geometry animates every path regardless of its real length. It is laid out in two narrow columns
-  specifically so it fits a 360px phone without horizontal scrolling.
-- **The portrait frame** ([`components/PortraitFrame.tsx`](components/PortraitFrame.tsx)) is an
-  offset hairline frame with viewfinder corner ticks, a soft brand-coloured glow, and five
-  technology satellites. Each satellite drifts on its own period (5.5s-6.8s) so the group never
-  pulses in unison, pauses on hover, and carries an `sr-only` label. Edit the `SATELLITES` array to
-  change which logos appear or where they sit — the offsets are percentages, so they hold position
-  as the frame scales. The hero section is `overflow-x-clip` so the glow can bleed without ever
-  widening the page.
-- **Nav links scroll programmatically, not via the browser's fragment jump**
-  ([`components/Nav.tsx`](components/Nav.tsx)). Closing the mobile sheet cancels any scroll still
-  in flight — both the native hash scroll and an explicit smooth `scrollIntoView` — which left taps
-  doing nothing at all. The sheet now closes first and the scroll starts from
-  `AnimatePresence`'s `onExitComplete`, so the two never race. Don't reintroduce a
-  `body { overflow: hidden }` lock while the sheet is open either; that blocks the scroll for the
-  same reason, and the sheet sits in a fixed header so it does not need one.
-- **Motion primitives** live in [`components/ui/`](components/ui/): `WordReveal` (staggered
-  headline), `Scramble` (decode-on-scroll headings), `Magnetic` (buttons pulled toward the
-  pointer), `Tilt` (3D perspective, mouse only), `Marquee` (seamless tech strip), `Cursor` and
-  `Curtain`. Every one degrades: the real text is server-rendered before any scramble or
-  word-split runs, so crawlers and JS-less visitors get the finished content.
-- **The custom cursor renders nothing at all** unless the device has a fine pointer and allows
-  motion. Rendering it unconditionally strands the dot and ring in the top-left corner of every
-  phone — gate the render, not just the effect.
-- **Reduced motion** is honoured throughout: aurora, curtain and cursor are removed outright, the
-  marquee and satellites stop, reveals render immediately, and smooth scrolling is disabled.
+  mapping lives in `TECH_DOMAIN` and `TAG_DOMAIN`; `accentOf(name)` resolves it. In diagrams a
+  packet takes the colour of the domain it is entering. Surfaces stay achromatic.
+- **Section themes.** Each section sets `data-theme="dark|raised|sunken|light"` and reads only the
+  `--s-*` variables in `app/globals.css`. The light theme swaps the accents for `-deep` variants that
+  pass contrast on white. `dark` is transparent so the aurora shows through. The nav reads the theme
+  of the section under it and matches it.
+- **Filled accent buttons use dark text** (`--s-on-signal`). White on vermilion fails contrast.
+- **Motion** goes through [`lib/motion.ts`](lib/motion.ts): GSAP with ScrollTrigger, Lenis smooth
+  scroll, exponential ease-out. Content is complete in the server HTML; animation only layers on top.
+  Every loop pauses off-screen and in hidden tabs, and reduced motion gets a meaningful static frame.
+- **Anchor offset** comes from `scroll-margin-top` on `section[id]` only. Do not add an offset in
+  Lenis as well; the two stack.
+- **Nav links scroll programmatically.** The mobile sheet closes first and the scroll starts after
+  it has finished closing, so taps never get cancelled. Don't add a `body { overflow: hidden }` lock.
+- **Hydration.** Diagram coordinates are rounded and nothing random runs during render, so the
+  server and client markup match. Keep it that way when editing the SVGs.
 
 ## Contact
 

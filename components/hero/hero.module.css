@@ -1,0 +1,149 @@
+/* Hero load choreography and diagram styling.
+
+   The entrance is pure CSS so it starts on first paint, before hydration, and
+   can never leave the hero blank: every animation ends on the visible state
+   and nothing is hidden outside an animation. Order, about 1.5s in total:
+   name rises through its mask, copy follows, wires draw, nodes switch on,
+   then the traffic engine (JS) takes over. */
+
+.mask {
+  display: block;
+  overflow: hidden;
+  /* Room for descenders inside the mask without changing the line box. */
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+.rise {
+  display: block;
+  animation: rise 1.05s var(--ease-expo) both;
+}
+
+.follow {
+  animation: follow 0.9s var(--ease-expo) both;
+}
+
+.draw {
+  stroke-dasharray: 100;
+  animation: draw 0.8s var(--ease-expo) both;
+}
+
+.fade {
+  animation: fade 0.7s var(--ease-quart) both;
+}
+
+.switchOn {
+  animation: switch-on 0.6s linear both;
+}
+
+@keyframes rise {
+  from { transform: translate3d(0, 108%, 0); }
+  to { transform: none; }
+}
+
+@keyframes follow {
+  from { opacity: 0; transform: translate3d(0, 0.75rem, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes draw {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* A lamp powering up: a short stutter, then steady. */
+@keyframes switch-on {
+  0% { opacity: 0; }
+  22% { opacity: 0.85; }
+  34% { opacity: 0.2; }
+  52% { opacity: 1; }
+  64% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* Availability lamp: a slow ring, never a nervous blink. */
+.lamp {
+  position: relative;
+  display: inline-flex;
+  width: 0.5rem;
+  height: 0.5rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--s-signal);
+}
+
+.lamp::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: lamp-ring 2.8s var(--ease-quart) infinite;
+}
+
+@keyframes lamp-ring {
+  0% { transform: scale(1); opacity: 0.55; }
+  70%, 100% { transform: scale(2.6); opacity: 0; }
+}
+
+/* ── diagram text ─────────────────────────────────────────────── */
+.nodeLabel {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  fill: var(--s-fg);
+}
+
+.nodeSub {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  fill: var(--s-muted);
+}
+
+.edgeLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  fill: var(--s-muted);
+  /* Knock the wire out behind the text. */
+  paint-order: stroke;
+  stroke: var(--color-bg);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.legend {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  fill: var(--s-muted);
+}
+
+/* Static frame: packets frozen mid-flight. Shown under reduced motion and
+   without JS; with motion and JS the live engine draws its own. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .staticPacket { display: none; }
+}
+
+.frame {
+  transition: stroke-opacity 0.25s var(--ease-quart);
+}
+
+.lit .frame { stroke-opacity: 1; }
+.lit .lampDot { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .follow,
+  .draw,
+  .fade,
+  .switchOn {
+    animation: none;
+  }
+  .lamp::after { animation: none; opacity: 0; }
+}

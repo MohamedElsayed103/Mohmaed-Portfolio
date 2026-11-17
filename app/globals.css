@@ -65,11 +65,15 @@
   --ease-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
+  /* Deep variants: the same four domains, dark enough for text on the light blueprint theme (>= 4.5:1 on ink). */
+  --color-vermilion-deep: oklch(0.5 0.17 30);
+  --color-amber-deep: oklch(0.5 0.11 68);
+  --color-cyan-deep: oklch(0.47 0.09 215);
+  --color-violet-deep: oklch(0.49 0.17 300);
+
   --z-sticky: 20;
   --z-nav: 30;
   --z-sheet: 50;
-  --z-cursor: 70;
-  --z-curtain: 90;
 }
 
 @layer base {
@@ -155,6 +159,71 @@
   }
 }
 
+/* ── Section themes ───────────────────────────────────────────
+   Components read only the --s-* variables, so one attribute flips a
+   whole section. Dark stays transparent so the aurora shows through. */
+[data-theme] {
+  --s-bg: transparent;
+  --s-fg: var(--color-ink);
+  --s-body: var(--color-ink-dim);
+  --s-muted: var(--color-ink-mute);
+  --s-rule: var(--color-line);
+  --s-raised: var(--color-bg-raised);
+  --s-signal: var(--color-signal);
+  --s-compiled: var(--color-vermilion);
+  --s-python: var(--color-amber);
+  --s-infra: var(--color-cyan);
+  --s-frontend: var(--color-violet);
+  --s-on-signal: var(--color-bg-sunken);
+}
+
+[data-theme="raised"] {
+  --s-bg: var(--color-bg-raised);
+  --s-raised: oklch(0.245 0 0);
+}
+
+[data-theme="sunken"] {
+  --s-bg: var(--color-bg-sunken);
+  --s-raised: var(--color-bg);
+}
+
+[data-theme="light"] {
+  --s-bg: oklch(0.975 0 0);
+  --s-fg: oklch(0.165 0 0);
+  --s-body: oklch(0.3 0 0);
+  --s-muted: oklch(0.45 0 0);
+  --s-rule: oklch(0.87 0 0);
+  --s-raised: oklch(0.935 0 0);
+  --s-signal: var(--color-vermilion-deep);
+  --s-compiled: var(--color-vermilion-deep);
+  --s-python: var(--color-amber-deep);
+  --s-infra: var(--color-cyan-deep);
+  --s-frontend: var(--color-violet-deep);
+  --s-on-signal: oklch(0.985 0 0);
+  color-scheme: light;
+}
+
+section[data-theme],
+footer[data-theme],
+header[data-theme] {
+  background-color: var(--s-bg);
+  color: var(--s-body);
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 /* ── Aurora backdrop ──────────────────────────────────────────
    Four soft pools of the spectrum drifting behind everything.
    Purely decorative, pointer-events none, sits under all content. */
@@ -180,86 +249,6 @@
 @keyframes aurora-drift {
   from { transform: translate3d(0, 0, 0) scale(1); }
   to { transform: translate3d(6vw, -5vh, 0) scale(1.18); }
-}
-
-/* ── Marquee ──────────────────────────────────────────────────
-   Track holds two identical runs; translating by -50% loops seamlessly. */
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee-run linear infinite;
-  will-change: transform;
-}
-
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-
-@keyframes marquee-run {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(-50%, 0, 0); }
-}
-
-/* ── Page-load curtain ────────────────────────────────────────
-   Pure CSS with fill-mode forwards, so it always completes — no JS
-   needed to clear it, and reduced motion removes it instantly. */
-.curtain {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  background: var(--color-bg);
-  pointer-events: none;
-  transform-origin: top;
-  animation: curtain-lift 1s var(--ease-expo) 0.15s forwards;
-}
-
-@keyframes curtain-lift {
-  from { transform: scaleY(1); opacity: 1; }
-  to { transform: scaleY(0); opacity: 0; }
-}
-
-/* ── Custom cursor (fine pointers only) ───────────────────────── */
-.cursor-dot,
-.cursor-ring {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 70;
-  pointer-events: none;
-  border-radius: 50%;
-  will-change: transform;
-}
-
-.cursor-dot {
-  width: 6px;
-  height: 6px;
-  margin: -3px 0 0 -3px;
-  background: var(--color-signal);
-}
-
-.cursor-ring {
-  width: 30px;
-  height: 30px;
-  margin: -15px 0 0 -15px;
-  border: 1px solid color-mix(in oklab, var(--color-signal) 55%, transparent);
-  transition: width 0.28s var(--ease-quart), height 0.28s var(--ease-quart),
-    margin 0.28s var(--ease-quart), border-color 0.28s var(--ease-quart),
-    background-color 0.28s var(--ease-quart);
-}
-
-.cursor-ring[data-active="true"] {
-  width: 52px;
-  height: 52px;
-  margin: -26px 0 0 -26px;
-  border-color: color-mix(in oklab, var(--color-signal) 80%, transparent);
-  background-color: color-mix(in oklab, var(--color-signal) 12%, transparent);
-}
-
-@media (pointer: fine) {
-  html.has-custom-cursor,
-  html.has-custom-cursor * {
-    cursor: none !important;
-  }
 }
 
 /* ── Scroll reveal ────────────────────────────────────────────
@@ -292,61 +281,6 @@
   to { opacity: 1; transform: none; }
 }
 
-/* ── Portrait satellites ──────────────────────────────────────── */
-.satellite {
-  animation-name: satellite-drift;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-  will-change: transform;
-}
-
-.satellite:hover { animation-play-state: paused; }
-
-@keyframes satellite-drift {
-  from { transform: translate3d(0, 0.3rem, 0); }
-  to { transform: translate3d(0, -0.45rem, 0); }
-}
-
-/* ── System trace schematic ───────────────────────────────────── */
-.trace-pulse {
-  stroke-dasharray: 11 89;
-  stroke-dashoffset: 100;
-  animation-name: trace-travel;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-fill-mode: both;
-}
-
-@keyframes trace-travel {
-  0% { stroke-dashoffset: 100; opacity: 0; }
-  8% { opacity: 1; }
-  88% { opacity: 1; }
-  100% { stroke-dashoffset: 0; opacity: 0; }
-}
-
-.trace-node-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  fill: var(--color-ink);
-}
-
-.trace-node-sub {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.02em;
-  fill: var(--color-ink-mute);
-}
-
-.trace-edge-label {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.02em;
-  fill: var(--color-ink-faint);
-}
-
 /* ── Reduced motion ───────────────────────────────────────────
    Everything decorative stops. Content stays visible, never mid-fade. */
 @media (prefers-reduced-motion: reduce) {
@@ -361,20 +295,8 @@
     transform: none;
   }
 
-  .aurora,
-  .curtain,
-  .cursor-dot,
-  .cursor-ring {
+  .aurora {
     display: none !important;
-  }
-
-  .marquee-track { animation: none !important; }
-
-  @media (pointer: fine) {
-    html.has-custom-cursor,
-    html.has-custom-cursor * {
-      cursor: auto !important;
-    }
   }
 
   *,

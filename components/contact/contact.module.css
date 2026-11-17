@@ -1,0 +1,74 @@
+/* Contact + footer: the few things Tailwind utilities cannot say cleanly
+   (keyframes, :has() wiring between the email links and the state chip). */
+
+/* ── Live lamp ───────────────────────────────────────────── */
+.lamp {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--lamp);
+}
+
+.lamp::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--lamp);
+  opacity: 0;
+  animation: lamp-ping 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite paused;
+}
+
+.lamp[data-live="true"]::after {
+  animation-play-state: running;
+}
+
+@keyframes lamp-ping {
+  0% { transform: scale(1); opacity: 0.6; }
+  60%, 100% { transform: scale(3); opacity: 0; }
+}
+
+/* ── Pending transition: current ── YOUR_MESSAGE ──▶ NEXT_ROLE ── */
+.wire {
+  stroke-dasharray: 5 6;
+  animation: wire-flow 1.4s linear infinite paused;
+  transition: stroke 0.3s;
+}
+
+.machine[data-live="true"] .wire {
+  animation-play-state: running;
+}
+
+@keyframes wire-flow {
+  to { stroke-dashoffset: -22; }
+}
+
+.chip {
+  border-style: dashed;
+  transition: background-color 0.35s cubic-bezier(0.25, 1, 0.5, 1), color 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Pointing at a way to send the message fires the event: the wire goes
+   solid and NEXT_ROLE lights up. Purely a visual echo. */
+.contact:has([data-fire]:hover, [data-fire]:focus-visible) .wire {
+  stroke-dasharray: none;
+  stroke: var(--s-signal);
+}
+
+.contact:has([data-fire]:hover, [data-fire]:focus-visible) .chip {
+  border-style: solid;
+  border-color: var(--s-signal);
+  background-color: var(--s-signal);
+  color: var(--s-on-signal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lamp::after,
+  .wire {
+    animation: none;
+  }
+}
