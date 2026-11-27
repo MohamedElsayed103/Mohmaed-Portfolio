@@ -18,32 +18,32 @@ import {
 
 export type Result = { target: NodeId; status: "200 OK" | "202 Accepted"; ms: number };
 
-export const ASYNC_TARGETS: NodeId[] = ["rabbitmq", "celery", "minio"];
-const AUTH: NodeId[] = ["client", "api", "keycloak", "api"];
+export const ASYNC_TARGETS: NodeId[] = ["tasks", "peppol", "fta"];
+const AUTH: NodeId[] = ["client", "api", "auth", "api"];
 const SYNC_TO: Partial<Record<NodeId, NodeId[]>> = {
   api: [],
-  keycloak: [],
-  tenant: ["tenant"],
-  domain: ["tenant", "domain"],
-  postgres: ["tenant", "domain", "postgres", "domain"],
+  auth: [],
+  pint: ["pint"],
+  validate: ["pint", "validate"],
+  postgres: ["pint", "validate", "postgres", "validate"],
 };
 const BACK: Record<string, NodeId[]> = {
   api: ["client"],
-  tenant: ["api", "client"],
-  domain: ["tenant", "api", "client"],
+  pint: ["api", "client"],
+  validate: ["pint", "api", "client"],
 };
 
 /** Time a request spends inside each node, in ms (before jitter). */
 const DWELL: Record<NodeId, number> = {
   client: 0,
   api: 70,
-  keycloak: 150,
-  tenant: 60,
-  domain: 120,
+  auth: 150,
+  pint: 60,
+  validate: 120,
   postgres: 240,
-  rabbitmq: 90,
-  celery: 300,
-  minio: 130,
+  tasks: 90,
+  peppol: 300,
+  fta: 130,
 };
 
 const jitter = (v: number, amt = 0.4) => v * (1 - amt + Math.random() * amt * 2);
@@ -52,12 +52,12 @@ const ease = (t: number) => 0.5 - Math.cos(Math.PI * t) / 2;
 /** Route a request takes to `target`. Used for the static (reduced motion) answer too. */
 export function routeTo(target: NodeId, asyncEvent: boolean) {
   if (ASYNC_TARGETS.includes(target) || asyncEvent) {
-    const lane: NodeId[] = ["rabbitmq", "celery", "minio"];
+    const lane: NodeId[] = ["tasks", "peppol", "fta"];
     const stop = ASYNC_TARGETS.includes(target) ? lane.indexOf(target) + 1 : 3;
     return {
-      request: [...AUTH, "tenant", "domain"] as NodeId[],
-      response: ["domain", "tenant", "api", "client"] as NodeId[],
-      event: ["domain", ...lane.slice(0, stop)] as NodeId[],
+      request: [...AUTH, "pint", "validate"] as NodeId[],
+      response: ["validate", "pint", "api", "client"] as NodeId[],
+      event: ["validate", ...lane.slice(0, stop)] as NodeId[],
     };
   }
   const t = target === "client" ? "postgres" : target;

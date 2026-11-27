@@ -1,18 +1,18 @@
 import { domainOf, featured } from "@/data/content";
 import { ArrowUpRight } from "./icons";
 import { Reveal } from "./Reveal";
-import { IsolationDemo } from "./healthcare/IsolationDemo";
-import { SystemStrip } from "./healthcare/SystemStrip";
-import s from "./healthcare/healthcare.module.css";
+import { IsolationDemo } from "./grc/IsolationDemo";
+import { SystemStrip } from "./grc/SystemStrip";
+import s from "./grc/grc.module.css";
 
-const project = featured.find((p) => p.slug === "healthcare-saas")!;
+const project = featured.find((p) => p.slug === "grc-platform")!;
 
-/** The white blueprint between dark sections: the isolation guarantee, drawn and pressable. */
-export function ProjectHealthcare() {
+/** White Matter's GRC platform: the Zero Trust tenant boundary, drawn and pressable. */
+export function ProjectGrc() {
   const [thesis, ...more] = project.bullets ?? [];
 
   return (
-    <section id="project-healthcare" data-theme="light" className="py-24 sm:py-36" aria-labelledby="healthcare-title">
+    <section id="project-grc" data-theme="sunken" className="py-24 sm:py-36" aria-labelledby="grc-title">
       <div className="shell">
         <header className="grid gap-x-16 gap-y-10 lg:grid-cols-12">
           <Reveal className="lg:col-span-7">
@@ -24,7 +24,7 @@ export function ProjectHealthcare() {
               <span className="font-mono text-[0.8125rem]">{project.year}</span>
             </p>
             <h3
-              id="healthcare-title"
+              id="grc-title"
               className="mt-4 max-w-[14ch] text-h1 font-extrabold text-[var(--s-fg)]"
             >
               {project.name}
@@ -81,8 +81,8 @@ export function ProjectHealthcare() {
               Tenant isolation, live
             </h4>
             <p id="iso-desc" className="max-w-[62ch] text-[0.9375rem] text-[var(--s-muted)]">
-              Pick a clinic and send a request. The tenant is read from the token, so the query can only land in that
-              clinic&apos;s schema.
+              Pick an organisation and send a request. The middleware verifies the tenant against the token, so the
+              query can only land in that organisation&apos;s schema.
             </p>
           </div>
           <IsolationDemo />
@@ -90,9 +90,9 @@ export function ProjectHealthcare() {
 
         <div className="mt-20 grid gap-8 sm:mt-28 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-3">
-            <h4 className="text-[1.0625rem] font-bold text-[var(--s-fg)]">Off the request path</h4>
+            <h4 className="text-[1.0625rem] font-bold text-[var(--s-fg)]">Approvals as workflows</h4>
             <p className="mt-2 max-w-[40ch] text-[0.9375rem] text-[var(--s-muted)]">
-              Domain modules publish events; workers pick them up. Every service runs in Docker.
+              Governance and risk modules hand approvals to Temporal, and the outcome lands in that tenant&apos;s risk register.
             </p>
           </div>
           <div className="lg:col-span-9">

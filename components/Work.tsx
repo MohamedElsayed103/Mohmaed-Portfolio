@@ -1,9 +1,10 @@
-import { ProjectHealthcare } from "./ProjectHealthcare";
+import { ProjectSanade } from "./ProjectSanade";
+import { ProjectGrc } from "./ProjectGrc";
 import { ProjectReverie } from "./ProjectReverie";
 import { ProjectUseCase } from "./ProjectUseCase";
 import { WorkIndex } from "./WorkIndex";
 
-/** Three featured systems, each drawn the way it runs, then the full repository index. */
+/** Four featured systems, each drawn the way it runs, then the full repository index. */
 export function Work() {
   return (
     <div id="work">
@@ -11,11 +12,12 @@ export function Work() {
         <div className="shell flex flex-wrap items-baseline justify-between gap-x-12 gap-y-4">
           <h2 className="text-h1">Selected work</h2>
           <p className="max-w-[44ch] text-lead text-[var(--s-muted)]">
-            Three systems, each drawn the way it runs. Press things; they respond.
+            Four systems, each drawn the way it runs. Press things; they respond.
           </p>
         </div>
       </section>
-      <ProjectHealthcare />
+      <ProjectSanade />
+      <ProjectGrc />
       <ProjectReverie />
       <ProjectUseCase />
       <WorkIndex />

@@ -21,39 +21,39 @@ import s from "./hero.module.css";
 /* Order the wires draw and the nodes switch on, following the request. */
 const EDGE_DELAY: Record<string, number> = {
   "client>api": 520,
-  "api>keycloak": 640,
-  "api>tenant": 700,
-  "tenant>domain": 800,
-  "domain>postgres": 900,
-  "domain>rabbitmq": 1040,
-  "rabbitmq>celery": 1120,
-  "celery>minio": 1200,
+  "api>auth": 640,
+  "api>pint": 700,
+  "pint>validate": 800,
+  "validate>postgres": 900,
+  "validate>tasks": 1040,
+  "tasks>peppol": 1120,
+  "peppol>fta": 1200,
 };
 const NODE_DELAY: Record<NodeId, number> = {
   client: 460,
   api: 600,
-  keycloak: 760,
-  tenant: 830,
-  domain: 930,
+  auth: 760,
+  pint: 830,
+  validate: 930,
   postgres: 1030,
-  rabbitmq: 1150,
-  celery: 1230,
-  minio: 1310,
+  tasks: 1150,
+  peppol: 1230,
+  fta: 1310,
 };
 const TRAFFIC_AT = 1550;
 
 /* Frozen frame for reduced motion and no-JS: a request entering the domain,
-   its query on the way to PostgreSQL, an event between RabbitMQ and Celery,
+   its write on the way to PostgreSQL, a task between Celery and the Peppol access point,
    and an earlier response heading back to the client. */
 const STATIC_PACKETS: { a: NodeId; b: NodeId; t: number; kind: "req" | "evt" }[] = [
-  { a: "tenant", b: "domain", t: 0.55, kind: "req" },
-  { a: "domain", b: "postgres", t: 0.6, kind: "req" },
-  { a: "rabbitmq", b: "celery", t: 0.5, kind: "evt" },
+  { a: "pint", b: "validate", t: 0.55, kind: "req" },
+  { a: "validate", b: "postgres", t: 0.6, kind: "req" },
+  { a: "tasks", b: "peppol", t: 0.5, kind: "evt" },
   { a: "api", b: "client", t: 0.45, kind: "req" },
 ];
 
 const DESC =
-  "A request from the client reaches the Django API, which verifies its JWT with Keycloak, resolves the tenant in middleware, and makes a scoped call into the domain modules. They query PostgreSQL, where each tenant has its own schema, and the response returns along the same path. Some requests also publish an event to RabbitMQ; Celery workers consume it and store files in MinIO, and the client gets 202 Accepted straight away. The traffic shown is simulated.";
+  "A supplier posts an invoice to the Django API, which checks MFA and the tenant, generates a PINT AE invoice and runs fail-closed validation before anything is stored in PostgreSQL. Valid invoices are handed to an idempotent Celery task that sends them over Peppol with AS4 and reports them to the UAE Federal Tax Authority, so the supplier gets 202 Accepted straight away. The traffic shown is simulated.";
 
 type Lit = { nodes: Set<NodeId>; edges: Set<string> } | null;
 
@@ -192,7 +192,7 @@ export function PlatformLive() {
       className="relative m-0"
     >
       <figcaption id="platform-title" className="sr-only">
-        Live diagram: a request through the healthcare platform
+        Live diagram: an invoice through Sanade, the UAE e-invoicing platform
       </figcaption>
       <p id="platform-desc" className="sr-only">
         {DESC}

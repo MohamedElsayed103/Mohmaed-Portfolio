@@ -1,8 +1,9 @@
 export const profile = {
   name: "Mohamed Elsayed",
-  role: "Backend Engineer",
+  role: "Backend Software Engineer",
   location: "Cairo, Egypt",
   availability: "Open to backend roles",
+  remote: "Open to remote, EU/US time-zone overlap",
   email: "mohamed.elsayed.11011@gmail.com",
   phone: "+20 10 9975 2000",
   phoneHref: "tel:+201099752000",
@@ -15,21 +16,31 @@ export const profile = {
   avatarHeight: 1250,
   cv: "/Mohamed-Elsayed-CV.pdf",
   positioning:
-    "I build the layer users never see — multi-tenant backends in Java and Python that stay correct under load.",
+    "I build the layer users never see: multi-tenant SaaS backends in Python, from a UAE national e-invoicing platform to a GRC platform, delivered test-first.",
 } as const;
 
 export const about = {
   paragraphs: [
-    "Ain Shams CIS graduate, ECPC competitor, ITI Full Stack Python. Since then, one question: what makes a backend hold together when requirements change underneath it.",
-    "Today: Django services for a Saudi Ministry of Foreign Affairs project, and a healthcare platform where the hard part is isolation. Before that, Java and Spring Boot at Orange Innovation.",
+    "Ain Shams CIS graduate, ECPC competitor, ITI Full Stack Python, with a Java and Spring Boot background from Orange Innovation. One question since: what makes a backend hold together when requirements change underneath it.",
+    "Today at LightIdea: Sanade, the UAE national e-invoicing platform, where I built the Peppol integration and FTA tax reporting, plus enterprise modules for the Abu Dhabi Judicial Department. Part-time at White Matter, governance and risk modules for a multi-tenant GRC platform.",
   ],
   facts: [
     { label: "Based", value: "Cairo, Egypt", icon: "pin" },
-    { label: "Focus", value: "Backend — Java & Python", icon: "server" },
+    { label: "Focus", value: "Backend: Python, with Java", icon: "server" },
+    { label: "Works", value: "Remote, EU/US time-zone overlap", icon: "globe" },
     { label: "Degree", value: "BSc Computer & Information Science", icon: "cap" },
-    { label: "Languages", value: "Arabic, English", icon: "globe" },
+    { label: "Languages", value: "Arabic (native), English (professional)", icon: "globe" },
   ],
 } as const;
+
+/** One client engagement inside a role (LightIdea runs several at once). */
+export type Engagement = {
+  name: string;
+  context?: string;
+  summary?: string;
+  bullets: string[];
+  stack: string[];
+};
 
 export type Role = {
   company: string;
@@ -39,6 +50,7 @@ export type Role = {
   summary: string;
   bullets: string[];
   stack: string[];
+  engagements?: Engagement[];
   current?: boolean;
 };
 
@@ -48,12 +60,36 @@ export const experience: Role[] = [
     role: "Software Engineer",
     type: "Full-time",
     period: "Dec 2025 — Present",
-    summary: "Django services for a government programme.",
-    bullets: [
-      "Moved long-running work onto Celery and RabbitMQ, off the request path.",
-      "Designed and tuned the SQL behind a Saudi Ministry of Foreign Affairs project.",
+    summary: "Backends for a national e-invoicing platform and two government clients.",
+    bullets: [],
+    engagements: [
+      {
+        name: "Sanade",
+        context: "UAE National E-Invoicing Platform",
+        summary:
+          "UAE e-invoicing SaaS: issues PINT AE invoices over the Peppol network and reports them to the Federal Tax Authority (FTA).",
+        bullets: [
+          "Built the Peppol integration (AS4 messaging, SMP discovery, certificate trust) and PINT AE invoice generation with fail-closed validation and FTA tax reporting.",
+          "Hardened security and reliability: MFA, AES-256 encryption at rest, tenant isolation. Audited 40 Celery tasks to prevent duplicate tax submissions; fixed 71 bugs test-first in a 6,300+ test suite.",
+        ],
+        stack: ["Django", "DRF", "Celery", "Redis", "PostgreSQL", "Azure"],
+      },
+      {
+        name: "Abu Dhabi Judicial Department",
+        context: "ADJD",
+        bullets: [
+          "Built Java MVC web modules end to end, including an HR attendance-violation module with error tracking and Excel export.",
+          "Developed bilingual Arabic / English reports and SQL / PL/SQL business logic for HR and finance processes.",
+        ],
+        stack: ["Java", "SQL", "PL/SQL", "Oracle"],
+      },
+      {
+        name: "Ministry of Foreign Affairs, Saudi Arabia",
+        bullets: ["Built Django backend services with Celery / RabbitMQ async processing and optimized SQL queries."],
+        stack: ["Django", "Celery", "RabbitMQ", "SQL"],
+      },
     ],
-    stack: ["Django", "Python", "Celery", "RabbitMQ", "PostgreSQL"],
+    stack: ["Django", "DRF", "Celery", "Redis", "PostgreSQL", "Azure", "Java", "Oracle", "RabbitMQ"],
     current: true,
   },
   {
@@ -61,13 +97,12 @@ export const experience: Role[] = [
     role: "Back-end Developer",
     type: "Part-time",
     period: "Dec 2025 — Present",
-    summary: "Multi-tenant healthcare SaaS where isolation is the product requirement.",
+    summary: "Multi-tenant Governance, Risk & Compliance (GRC) SaaS.",
     bullets: [
-      "Schema-per-tenant modular monolith, eighteen bounded modules.",
-      "Middleware-enforced tenant context — cross-tenant leakage is impossible.",
-      "Zero Trust access with Keycloak, JWT and RBAC; contexts talk over an event bus.",
+      "Built governance and risk modules (Temporal approval workflows, risk register) on schema-per-tenant DDD.",
+      "Implemented Zero Trust middleware with JWT, tenant verification, RBAC and Redis rate limiting.",
     ],
-    stack: ["Django", "PostgreSQL", "Keycloak", "RabbitMQ", "MinIO", "Docker"],
+    stack: ["FastAPI", "PostgreSQL", "Keycloak", "Temporal", "RabbitMQ", "Redis"],
     current: true,
   },
   {
@@ -77,7 +112,7 @@ export const experience: Role[] = [
     period: "Aug 2023 — Nov 2023",
     summary: "Where the Java habits came from.",
     bullets: [
-      "Spring Boot, REST APIs and dependency injection on production-shaped codebases.",
+      "Built REST APIs with Java, Spring Boot and PostgreSQL using MVC and design patterns.",
       "PostgreSQL through an ORM — and where that abstraction stops paying for itself.",
     ],
     stack: ["Java", "Spring Boot", "PostgreSQL", "Maven"],
@@ -100,19 +135,33 @@ export type Project = {
 
 export const featured: Project[] = [
   {
-    slug: "healthcare-saas",
-    name: "Healthcare SaaS Platform",
-    kicker: "White Matter",
+    slug: "sanade",
+    name: "Sanade",
+    kicker: "UAE National E-Invoicing Platform · LightIdea",
     year: "2026",
     summary:
-      "Multi-tenant clinic backend. Modular monolith, schema-per-tenant, eighteen bounded modules.",
+      "National e-invoicing SaaS. Issues PINT AE invoices over the Peppol network and reports them to the UAE Federal Tax Authority.",
     bullets: [
-      "A request is structurally incapable of reading another clinic's records.",
-      "Keycloak identity, Celery over RabbitMQ, MinIO storage, full Docker topology.",
+      "Built the Peppol integration: AS4 messaging, SMP discovery, certificate trust.",
+      "PINT AE invoice generation with fail-closed validation and FTA tax reporting.",
+      "Audited 40 Celery tasks to prevent duplicate tax submissions.",
+      "Fixed 71 bugs test-first in a 6,300+ test suite. MFA, AES-256 encryption at rest, tenant isolation.",
     ],
-    stack: ["Django", "PostgreSQL", "Keycloak", "Celery", "RabbitMQ", "MinIO", "Docker"],
+    stack: ["Django", "DRF", "Celery", "Redis", "PostgreSQL", "Azure"],
     tags: ["Python"],
-    repo: "https://github.com/MohamedElsayed103/medical",
+  },
+  {
+    slug: "grc-platform",
+    name: "GRC Platform",
+    kicker: "White Matter",
+    year: "2026",
+    summary: "Multi-tenant Governance, Risk & Compliance SaaS. Schema-per-tenant, domain-driven.",
+    bullets: [
+      "Zero Trust middleware: JWT, tenant verification, RBAC and Redis rate limiting.",
+      "Governance and risk modules: Temporal approval workflows and a risk register.",
+    ],
+    stack: ["FastAPI", "PostgreSQL", "Keycloak", "Temporal", "RabbitMQ", "Redis"],
+    tags: ["Python"],
   },
   {
     slug: "reverie",
@@ -147,10 +196,19 @@ export const featured: Project[] = [
 
 export const projects: Project[] = [
   {
+    slug: "healthcare-saas",
+    name: "Healthcare SaaS Platform",
+    year: "2026",
+    summary: "Multi-tenant clinic backend: schema-per-tenant modular monolith, Keycloak, Celery over RabbitMQ, MinIO.",
+    stack: ["Django", "PostgreSQL", "Keycloak", "Celery", "RabbitMQ", "MinIO", "Docker"],
+    tags: ["Python"],
+    repo: "https://github.com/MohamedElsayed103/medical",
+  },
+  {
     slug: "book-store",
     name: "Online Book Store",
     year: "2024",
-    summary: "Storefront and admin back office. Builder, Strategy, Factory, Singleton.",
+    summary: "Orders, cart, reviews and payments. Builder, Strategy and Factory patterns.",
     stack: ["Java", "Spring Boot", "MySQL"],
     tags: ["Java"],
     repo: "https://github.com/MohamedElsayed103/Book-Store-Spring-Boot",
@@ -231,48 +289,55 @@ export const projects: Project[] = [
 
 export const projectTags = ["All", "Java", "Python", "Frontend", "DevOps", "AI", "C++"] as const;
 
-/** The logo grid. Names must match keys in data/techIcons.ts. */
+/** The stack strata. Names with an entry in data/techIcons.ts get a logo. */
 export const techStack: { name: string; core?: boolean }[] = [
-  { name: "Java", core: true },
-  { name: "Spring Boot", core: true },
   { name: "Python", core: true },
   { name: "Django", core: true },
+  { name: "FastAPI", core: true },
+  { name: "Celery", core: true },
   { name: "PostgreSQL", core: true },
   { name: "RabbitMQ", core: true },
-  { name: "Celery", core: true },
+  { name: "Redis", core: true },
+  { name: "Java", core: true },
+  { name: "Spring Boot", core: true },
   { name: "Docker", core: true },
+  { name: "Django REST Framework" },
+  { name: "Temporal" },
+  { name: "Keycloak" },
+  { name: "Azure" },
+  { name: "Oracle" },
   { name: "Hibernate" },
   { name: "JWT" },
-  { name: "Redis" },
-  { name: "Keycloak" },
-  { name: "MinIO" },
   { name: "MySQL" },
-  { name: "Nginx" },
+  { name: "MinIO" },
+  { name: "GitHub Actions" },
   { name: "Jenkins" },
+  { name: "Linux" },
+  { name: "Git" },
+  { name: "pytest" },
+  { name: "JUnit" },
   { name: "TypeScript" },
   { name: "React" },
   { name: "Next.js" },
   { name: "Tailwind CSS" },
-  { name: "Git" },
-  { name: "Linux" },
-  { name: "Postman" },
-  { name: "JUnit" },
 ];
 
-/** Things without a logo — kept as text so the grid stays a grid. */
+/** Things without a logo: the bedrock layer of the stack. */
 export const concepts = [
-  "Domain-Driven Design",
   "Multi-Tenancy",
+  "Domain-Driven Design",
+  "Peppol (AS4, PINT AE)",
+  "UBL / XML",
+  "OAuth2",
+  "Zero Trust",
+  "TDD",
   "Event-Driven Architecture",
-  "Layered Architecture",
-  "Repository Pattern",
-  "Dependency Injection",
+  "Webhooks",
+  "REST APIs",
+  "SQL / PL/SQL",
   "Design Patterns",
   "OOP",
-  "REST APIs",
-  "Microservices",
   "Data Structures & Algorithms",
-  "SQL",
 ];
 
 export const education = [
@@ -284,7 +349,7 @@ export const education = [
   },
   {
     credential: "Full Stack Using Python",
-    detail: "Nine-month diploma",
+    detail: "Jul 2025 — Nov 2025",
     place: "Information Technology Institute (ITI), Cairo",
     year: "2025",
   },
@@ -336,6 +401,8 @@ const TECH_DOMAIN: Record<string, Domain> = {
   "Django REST Framework": "python",
   DRF: "python",
   Celery: "python",
+  FastAPI: "python",
+  pytest: "python",
   SimpleJWT: "python",
   T5: "python",
 
@@ -346,6 +413,13 @@ const TECH_DOMAIN: Record<string, Domain> = {
   RabbitMQ: "infra",
   MinIO: "infra",
   Keycloak: "infra",
+  Temporal: "infra",
+  Azure: "infra",
+  Oracle: "infra",
+  SQL: "infra",
+  "PL/SQL": "infra",
+  "GitHub Actions": "infra",
+  OAuth2: "infra",
   Docker: "infra",
   Nginx: "infra",
   Jenkins: "infra",
@@ -399,8 +473,8 @@ export function accentOf(name: string): string | undefined {
 /** Legend shown under the stack grid. */
 export const domainLegend: { domain: Domain; label: string; blurb: string }[] = [
   { domain: "compiled", label: "Compiled", blurb: "Java, Spring, JVM" },
-  { domain: "python", label: "Python", blurb: "Django, DRF, Celery" },
-  { domain: "infra", label: "Infrastructure", blurb: "Stores, queues, deploys" },
+  { domain: "python", label: "Python", blurb: "Django, FastAPI, Celery" },
+  { domain: "infra", label: "Infrastructure", blurb: "Stores, queues, workflows" },
   { domain: "frontend", label: "Frontend", blurb: "React, Next.js, TS" },
 ];
 
@@ -411,44 +485,78 @@ export const domainLegend: { domain: Domain; label: string; blurb: string }[] = 
 
 /** One-line statement for the About section's scroll-fill. */
 export const statement =
-  "I build the layer users never see. Backends in Java and Python where a request can only reach the data it is allowed to, slow work leaves the request path, and the code still holds when the requirements move underneath it.";
+  "I build the layer users never see. Multi-tenant backends in Python where an invoice either passes every rule or never leaves, a tax submission happens exactly once, and a request can only reach the tenant it belongs to.";
 
-/** Request path through the Healthcare SaaS platform (hero + project). */
-export const platform = {
+/** Sanade's invoice path (hero diagram + Sanade project). Mirrors the Sanade bullets above. */
+export const invoicing = {
   nodes: [
-    { id: "client", label: "client", sub: "browser", domain: undefined },
-    { id: "api", label: "api", sub: "Django", domain: "python" },
-    { id: "keycloak", label: "Keycloak", sub: "JWT · RBAC", domain: "infra" },
-    { id: "tenant", label: "tenant context", sub: "middleware", domain: "python" },
-    { id: "domain", label: "domain modules", sub: "18 bounded", domain: "python" },
-    { id: "postgres", label: "PostgreSQL", sub: "schema per tenant", domain: "infra" },
-    { id: "rabbitmq", label: "RabbitMQ", sub: "event bus", domain: "infra" },
-    { id: "celery", label: "Celery", sub: "workers", domain: "python" },
-    { id: "minio", label: "MinIO", sub: "objects", domain: "infra" },
+    { id: "client", label: "supplier", sub: "issues invoice", domain: undefined },
+    { id: "api", label: "api", sub: "Django · DRF", domain: "python" },
+    { id: "auth", label: "auth", sub: "MFA · tenant", domain: "python" },
+    { id: "pint", label: "PINT AE", sub: "invoice builder", domain: "python" },
+    { id: "validate", label: "validation", sub: "fail-closed", domain: "python" },
+    { id: "postgres", label: "PostgreSQL", sub: "invoices", domain: "infra" },
+    { id: "tasks", label: "Celery", sub: "idempotent", domain: "python" },
+    { id: "peppol", label: "Peppol AP", sub: "AS4 · SMP · certs", domain: "infra" },
+    { id: "fta", label: "FTA", sub: "tax reporting", domain: "infra" },
   ],
   edges: [
-    { from: "client", to: "api", label: "request" },
-    { from: "api", to: "keycloak", label: "verify JWT" },
-    { from: "api", to: "tenant", label: "resolve tenant" },
-    { from: "tenant", to: "domain", label: "scoped call" },
-    { from: "domain", to: "postgres", label: "query" },
-    { from: "domain", to: "rabbitmq", label: "publish event", async: true },
-    { from: "rabbitmq", to: "celery", label: "consume", async: true },
-    { from: "celery", to: "minio", label: "store", async: true },
+    { from: "client", to: "api", label: "POST" },
+    { from: "api", to: "auth", label: "verify" },
+    { from: "api", to: "pint", label: "generate" },
+    { from: "pint", to: "validate", label: "check rules" },
+    { from: "validate", to: "postgres", label: "persist" },
+    { from: "validate", to: "tasks", label: "enqueue", async: true },
+    { from: "tasks", to: "peppol", label: "send AS4", async: true },
+    { from: "peppol", to: "fta", label: "report", async: true },
   ],
 } as const;
 
-/** Tenant-isolation demo for the Healthcare SaaS project. Tenant names are examples. */
+/** Sanade demo outcomes. The invoice number is an example. */
+export const sanadeDemo = {
+  invoice: "INV-2026-0142",
+  steps: [
+    { id: "pint", label: "PINT AE", note: "invoice generated from the request" },
+    { id: "validate", label: "Validation", note: "fail-closed: any broken rule stops it here" },
+    { id: "peppol", label: "Peppol", note: "SMP discovery, then AS4 to the buyer's access point" },
+    { id: "fta", label: "FTA", note: "tax report submitted once, by an idempotent task" },
+  ],
+  outcomes: {
+    issue: "200  delivered over Peppol, reported to the FTA",
+    invalid: "422  validation failed: nothing sent, nothing reported",
+    retry: "200  already reported: duplicate submission skipped",
+  },
+};
+
+/** GRC platform: the request side for the isolation demo, the async side for the strip. */
+export const grcPlatform = {
+  nodes: [
+    { id: "keycloak", label: "Keycloak", sub: "JWT · RBAC", domain: "infra" },
+    { id: "tenant", label: "Zero Trust middleware", sub: "tenant · rate limit", domain: "python" },
+    { id: "postgres", label: "PostgreSQL", sub: "schema per tenant", domain: "infra" },
+    { id: "modules", label: "risk modules", sub: "DDD", domain: "python" },
+    { id: "temporal", label: "Temporal", sub: "approval workflow", domain: "infra" },
+    { id: "register", label: "risk register", sub: "per tenant", domain: "python" },
+  ],
+  edges: [
+    { from: "keycloak", to: "tenant", label: "verified token" },
+    { from: "tenant", to: "postgres", label: "scoped query" },
+    { from: "modules", to: "temporal", label: "start approval", async: true },
+    { from: "temporal", to: "register", label: "record outcome", async: true },
+  ],
+} as const;
+
+/** Tenant-isolation demo for the GRC platform. Tenant names are examples. */
 export const isolation = {
   tenants: [
-    { id: "clinic_a", label: "Clinic A", schema: "tenant_clinic_a" },
-    { id: "clinic_b", label: "Clinic B", schema: "tenant_clinic_b" },
-    { id: "clinic_c", label: "Clinic C", schema: "tenant_clinic_c" },
+    { id: "org_a", label: "Org A", schema: "tenant_org_a" },
+    { id: "org_b", label: "Org B", schema: "tenant_org_b" },
+    { id: "org_c", label: "Org C", schema: "tenant_org_c" },
   ],
-  /** What each step does, in order. Mirrors the bullets in `featured`. */
+  /** What each step does, in order. Mirrors the White Matter bullets. */
   steps: [
     { id: "auth", label: "Keycloak", note: "JWT verified, role checked" },
-    { id: "middleware", label: "Tenant middleware", note: "tenant taken from the token, not the request" },
+    { id: "middleware", label: "Zero Trust middleware", note: "tenant verified against the token; rate limit applied" },
     { id: "schema", label: "PostgreSQL", note: "query runs inside that tenant's schema only" },
   ],
   rejection: "403  tenant mismatch: request stopped in middleware",

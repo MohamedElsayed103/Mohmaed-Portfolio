@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { isolation, platform } from "@/data/content";
+import { grcPlatform, isolation } from "@/data/content";
 import { gsap, prefersReduced, whenVisible } from "@/lib/motion";
 import { STAGE, finalStage, inFlight, resolveRequest, type Action, type Outcome, type Stage } from "./isolation";
-import s from "./healthcare.module.css";
+import s from "./grc.module.css";
 
 type Pt = [number, number];
 type Geo = {
@@ -20,7 +20,7 @@ type Run = { o: Outcome; stage: Stage };
 type LogLine = { n: number; text: string; ok: boolean };
 
 const [AUTH, MIDDLEWARE, SCHEMA] = isolation.steps;
-const node = (id: string) => platform.nodes.find((n) => n.id === id)!;
+const node = (id: string) => grcPlatform.nodes.find((n) => n.id === id)!;
 const KEYCLOAK = node("keycloak");
 const TENANT_MW = node("tenant");
 const POSTGRES = node("postgres");
@@ -379,7 +379,7 @@ export function IsolationDemo() {
 
         <div className={s.tenants}>
           <p className={s.label} id="iso-tenant-label">
-            Signed in as (example clinics)
+            Signed in as (example organisations)
           </p>
           <div className={s.segmented} role="group" aria-labelledby="iso-tenant-label">
             {tenants.map((t, i) => (
@@ -467,7 +467,7 @@ export function IsolationDemo() {
               Read own records
             </button>
             <button type="button" className={`${s.btn} ${s.btnDanger}`} onClick={() => send("cross")}>
-              Try another clinic&apos;s records
+              Try another organisation&apos;s records
             </button>
           </div>
           <div className={s.readout}>

@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 const description =
-  "Backend engineer in Cairo building multi-tenant systems in Java and Python — schema-per-tenant isolation, event-driven services on Celery and RabbitMQ, and REST APIs that hold their shape under load.";
+  "Backend software engineer in Cairo building multi-tenant SaaS in Python: Sanade, the UAE national e-invoicing platform on Peppol, a GRC platform, and enterprise systems for the Abu Dhabi Judicial Department. Java and Spring Boot background. Open to remote work.";
 
 /* Set NEXT_PUBLIC_SITE_URL in the host's env once the domain is live —
    canonical and social-card URLs resolve against it. */
@@ -34,10 +34,14 @@ export const metadata: Metadata = {
   },
   description,
   keywords: [
-    "Backend Engineer",
+    "Backend Software Engineer",
+    "Python",
+    "FastAPI",
+    "E-invoicing",
+    "Peppol",
+    "Celery",
     "Java",
     "Spring Boot",
-    "Python",
     "Django",
     "PostgreSQL",
     "RabbitMQ",

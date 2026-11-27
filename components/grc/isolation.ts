@@ -9,7 +9,7 @@ export type Action = "own" | "cross";
 export type Outcome = {
   action: Action;
   tenant: Tenant;
-  /** The clinic whose records the request asks for. */
+  /** The organisation whose records the request asks for. */
   target: Tenant;
   ok: boolean;
   /** Index of the schema the query runs in, or null when it never reaches the database. */
@@ -28,7 +28,7 @@ export type Stage = (typeof STAGE)[keyof typeof STAGE];
 export function resolveRequest(tenantIndex: number, action: Action): Outcome {
   const all = isolation.tenants;
   const tenant = all[tenantIndex];
-  // "Another clinic" is always the next one along, so the demo is deterministic.
+  // "Another organisation" is always the next one along, so the demo is deterministic.
   const targetIndex = action === "own" ? tenantIndex : (tenantIndex + 1) % all.length;
   const target = all[targetIndex];
   // The middleware takes the tenant from the token, never from the request,

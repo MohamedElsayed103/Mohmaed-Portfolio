@@ -84,31 +84,60 @@ function RoleBody({ node }: { node: MachineNode }) {
         <span className="text-[var(--s-muted)]"> · {role.type}</span>
       </p>
       <p className="mt-5 max-w-[60ch] text-[1.0625rem] leading-relaxed text-[var(--s-body)]">{role.summary}</p>
-      <ul className="mt-5 max-w-[62ch] space-y-3">
-        {role.bullets.map((b) => (
-          <li key={b} className="grid grid-cols-[1.25rem_minmax(0,1fr)] text-[0.9875rem] leading-relaxed text-[var(--s-body)]">
-            <span
-              aria-hidden="true"
-              className="mt-[0.8em] h-[1.5px] w-2.5"
-              style={{ backgroundColor: node.accent }}
-            />
-            <span>{b}</span>
-          </li>
-        ))}
-      </ul>
-      <ul aria-label="Stack" className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
-        {role.stack.map((t) => (
-          <li key={t} className="flex items-center gap-2 text-[0.9375rem] text-[var(--s-fg)]">
-            <span
-              aria-hidden="true"
-              className="h-1.5 w-1.5 rounded-[1px]"
-              style={{ backgroundColor: accentVar(t) ?? "var(--s-muted)" }}
-            />
-            {t}
-          </li>
-        ))}
-      </ul>
+      {role.engagements ? (
+        /* A consultancy role: one entry per client engagement, each with its own stack. */
+        <ol className="mt-7 max-w-[62ch]">
+          {role.engagements.map((e) => (
+            <li key={e.name} className="border-t border-[var(--s-rule)] py-6 last:pb-0">
+              <h4 className="text-[1.1875rem] font-bold leading-snug text-[var(--s-fg)]">
+                {e.name}
+                {e.context && <span className="font-medium text-[var(--s-muted)]"> · {e.context}</span>}
+              </h4>
+              {e.summary && (
+                <p className="mt-2 text-[0.9875rem] leading-relaxed text-[var(--s-body)]">{e.summary}</p>
+              )}
+              <Bullets items={e.bullets} accent={node.accent} className="mt-4" />
+              <StackList items={e.stack} className="mt-4" />
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <>
+          <Bullets items={role.bullets} accent={node.accent} className="mt-5" />
+          <StackList items={role.stack} className="mt-6" />
+        </>
+      )}
     </>
+  );
+}
+
+function Bullets({ items, accent, className }: { items: string[]; accent?: string; className?: string }) {
+  return (
+    <ul className={`${className ?? ""} max-w-[62ch] space-y-3`}>
+      {items.map((b) => (
+        <li key={b} className="grid grid-cols-[1.25rem_minmax(0,1fr)] text-[0.9875rem] leading-relaxed text-[var(--s-body)]">
+          <span aria-hidden="true" className="mt-[0.8em] h-[1.5px] w-2.5" style={{ backgroundColor: accent }} />
+          <span>{b}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function StackList({ items, className }: { items: string[]; className?: string }) {
+  return (
+    <ul aria-label="Stack" className={`${className ?? ""} flex flex-wrap gap-x-5 gap-y-2`}>
+      {items.map((t) => (
+        <li key={t} className="flex items-center gap-2 text-[0.9375rem] text-[var(--s-fg)]">
+          <span
+            aria-hidden="true"
+            className="h-1.5 w-1.5 rounded-[1px]"
+            style={{ backgroundColor: accentVar(t) ?? "var(--s-muted)" }}
+          />
+          {t}
+        </li>
+      ))}
+    </ul>
   );
 }
 

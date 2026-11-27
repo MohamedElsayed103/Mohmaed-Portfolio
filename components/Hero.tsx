@@ -4,7 +4,7 @@ import { ArrowDown, Download, GitHub, LinkedIn, Mail } from "./icons";
 import s from "./hero/hero.module.css";
 
 /* The hero shows the system instead of a portrait: a live diagram of the
-   healthcare platform's request path. Typography anchors the left, the diagram
+   Sanade invoice path. Typography anchors the left, the diagram
    owns the right. The tech marquee was dropped on purpose: the diagram already
    names the stack, the Stack section shows it in full, and a second moving strip
    under moving packets competed for the eye. */
@@ -52,6 +52,10 @@ export function Hero() {
               /
             </span>
             {profile.location}
+            <span aria-hidden="true" className="mx-2.5 text-[var(--s-rule)]">
+              /
+            </span>
+            <span className="whitespace-nowrap">Remote, EU/US overlap</span>
           </p>
 
           <p

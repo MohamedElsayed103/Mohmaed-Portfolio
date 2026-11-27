@@ -29,8 +29,10 @@ only file you need to edit to keep the site current — nothing is hardcoded in 
 | `TECH_DOMAIN` / `TAG_DOMAIN` | Which accent colour each technology and tag gets |
 | `education` | The list beside the About copy, and two states in the experience machine |
 | `statement` | The scroll-filled statement in About |
-| `platform` | The live request-path diagram in the hero |
-| `isolation` | The tenant-isolation demo in the Healthcare project |
+| `invoicing` | Sanade's invoice path: the live hero diagram |
+| `sanadeDemo` | The invoice demo in the Sanade project |
+| `grcPlatform` | GRC request side and approval strip |
+| `isolation` | The tenant-isolation demo in the GRC Platform project |
 | `reverieRouting` | The routing demo in the Reverie project |
 | `useCaseDemo` | The user-story-to-UML demo in the Use Case project |
 | `career` | The experience state machine (states, events, the parallel fork) |
@@ -52,9 +54,9 @@ Append an entry to `projects` in `data/content.ts`:
 }
 ```
 
-The three featured projects each have a hand-built interactive section
-(`components/ProjectHealthcare.tsx`, `ProjectReverie.tsx`, `ProjectUseCase.tsx`) that reads
-`featured[0..2]` plus its own diagram data, so promoting a different project means building it a section.
+The four featured projects each have a hand-built interactive section
+(`components/ProjectSanade.tsx`, `ProjectGrc.tsx`, `ProjectReverie.tsx`, `ProjectUseCase.tsx`) that
+finds its `featured` entry by slug and reads its own diagram data, so promoting a different project means building it a section.
 
 ### Tech logos
 
@@ -98,8 +100,8 @@ The whole page is statically prerendered, so it serves from the CDN with no serv
 The full design contract is in [`DESIGN.md`](DESIGN.md). Worth knowing before changing things:
 
 - **The system is the portfolio.** Every visual is a working model of real backend behaviour:
-  live traffic through the healthcare platform in the hero, a cross-tenant request rejected at the
-  middleware, an unlisted slug that 404s, a user story becoming a UML diagram, and a career drawn as
+  live invoice traffic through Sanade in the hero, an invalid invoice stopped at fail-closed
+  validation, a retried tax report skipped, a cross-tenant request rejected at the middleware, an unlisted slug that 404s, a user story becoming a UML diagram, and a career drawn as
   a state machine with two parallel states. All diagram data lives in `data/content.ts`.
 - **Colour is semantic, not decorative.** Four accents each stand for a domain: vermilion for
   compiled/JVM work, amber for Python, cyan for data and infrastructure, violet for frontend. The

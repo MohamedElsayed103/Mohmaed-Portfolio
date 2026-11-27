@@ -1,4 +1,4 @@
-import { platform, type Domain } from "@/data/content";
+import { invoicing, type Domain } from "@/data/content";
 
 /* Geometry for the hero's platform diagram. Two hand-placed layouts share one
    logical graph (`platform` in content.ts): `wide` is a three-column grid with
@@ -7,7 +7,7 @@ import { platform, type Domain } from "@/data/content";
    units, chosen so the diagram never renders below 1:1 where it is used, which
    keeps 12px text at 12px or larger. */
 
-export type NodeId = (typeof platform.nodes)[number]["id"];
+export type NodeId = (typeof invoicing.nodes)[number]["id"];
 export type Pt = readonly [number, number];
 export type Rect = { x: number; y: number; w: number; h: number };
 export type Shape = "actor" | "service" | "store" | "queue";
@@ -35,16 +35,16 @@ export type Layout = {
 export const SHAPE: Record<NodeId, Shape> = {
   client: "actor",
   api: "service",
-  keycloak: "service",
-  tenant: "service",
-  domain: "service",
+  auth: "service",
+  pint: "service",
+  validate: "service",
   postgres: "store",
-  rabbitmq: "queue",
-  celery: "service",
-  minio: "store",
+  tasks: "queue",
+  peppol: "service",
+  fta: "actor",
 };
 
-export const NODES = platform.nodes.map((n) => ({
+export const NODES = invoicing.nodes.map((n) => ({
   id: n.id as NodeId,
   label: n.label as string,
   sub: n.sub as string,
@@ -67,7 +67,7 @@ export const edgeKey = (from: string, to: string) => `${from}>${to}`;
 type Route = Record<string, { pts: Pt[]; labelAt: EdgeGeom["labelAt"] }>;
 
 function build(key: Layout["key"], w: number, h: number, nodes: Record<NodeId, Rect>, routes: Route, legend: Layout["legend"]): Layout {
-  const edges = platform.edges.map((e) => {
+  const edges = invoicing.edges.map((e) => {
     const k = edgeKey(e.from, e.to);
     const r = routes[k];
     return {
@@ -97,23 +97,23 @@ export const WIDE = build(
   {
     client: wn(0, 0),
     api: wn(1, 0),
-    keycloak: wn(2, 0),
-    tenant: wn(1, 1),
-    domain: wn(1, 2),
+    auth: wn(2, 0),
+    pint: wn(1, 1),
+    validate: wn(1, 2),
     postgres: wn(2, 2),
-    rabbitmq: wn(0, 3),
-    celery: wn(1, 3),
-    minio: wn(2, 3),
+    tasks: wn(0, 3),
+    peppol: wn(1, 3),
+    fta: wn(2, 3),
   },
   {
     "client>api": { pts: [[132, 37], [214, 37]], labelAt: { x: 173, y: 29, anchor: "middle" } },
-    "api>keycloak": { pts: [[346, 37], [428, 37]], labelAt: { x: 387, y: 29, anchor: "middle" } },
-    "api>tenant": { pts: [[280, 62], [280, 124]], labelAt: { x: 290, y: 97, anchor: "start" } },
-    "tenant>domain": { pts: [[280, 174], [280, 236]], labelAt: { x: 290, y: 209, anchor: "start" } },
-    "domain>postgres": { pts: [[346, 261], [428, 261]], labelAt: { x: 387, y: 253, anchor: "middle" } },
-    "domain>rabbitmq": { pts: [[214, 261], [66, 261], [66, 348]], labelAt: { x: 140, y: 253, anchor: "middle" } },
-    "rabbitmq>celery": { pts: [[132, 373], [214, 373]], labelAt: { x: 173, y: 365, anchor: "middle" } },
-    "celery>minio": { pts: [[346, 373], [428, 373]], labelAt: { x: 387, y: 365, anchor: "middle" } },
+    "api>auth": { pts: [[346, 37], [428, 37]], labelAt: { x: 387, y: 29, anchor: "middle" } },
+    "api>pint": { pts: [[280, 62], [280, 124]], labelAt: { x: 290, y: 97, anchor: "start" } },
+    "pint>validate": { pts: [[280, 174], [280, 236]], labelAt: { x: 290, y: 209, anchor: "start" } },
+    "validate>postgres": { pts: [[346, 261], [428, 261]], labelAt: { x: 387, y: 253, anchor: "middle" } },
+    "validate>tasks": { pts: [[214, 261], [66, 261], [66, 348]], labelAt: { x: 140, y: 253, anchor: "middle" } },
+    "tasks>peppol": { pts: [[132, 373], [214, 373]], labelAt: { x: 173, y: 365, anchor: "middle" } },
+    "peppol>fta": { pts: [[346, 373], [428, 373]], labelAt: { x: 387, y: 365, anchor: "middle" } },
   },
   { x: 0, y: 112, rows: 4 },
 );
@@ -141,23 +141,23 @@ export const COMPACT = build(
   {
     client: kn(0, 0),
     api: kn(0, 1),
-    keycloak: kn(1, 1),
-    tenant: kn(0, 2),
-    domain: kn(0, 3),
+    auth: kn(1, 1),
+    pint: kn(0, 2),
+    validate: kn(0, 3),
     postgres: kn(1, 3),
-    rabbitmq: kn(0, 4),
-    celery: kn(0, 5),
-    minio: kn(1, 5),
+    tasks: kn(0, 4),
+    peppol: kn(0, 5),
+    fta: kn(1, 5),
   },
   {
     "client>api": vEdge(0, true),
-    "api>keycloak": hEdge(1),
-    "api>tenant": vEdge(1, true),
-    "tenant>domain": vEdge(2, true),
-    "domain>postgres": hEdge(3),
-    "domain>rabbitmq": vEdge(3, true),
-    "rabbitmq>celery": vEdge(4, true),
-    "celery>minio": hEdge(5),
+    "api>auth": hEdge(1),
+    "api>pint": vEdge(1, true),
+    "pint>validate": vEdge(2, true),
+    "validate>postgres": hEdge(3),
+    "validate>tasks": vEdge(3, true),
+    "tasks>peppol": vEdge(4, true),
+    "peppol>fta": hEdge(5),
   },
   { x: 172, y: 14, rows: 2 },
 );
