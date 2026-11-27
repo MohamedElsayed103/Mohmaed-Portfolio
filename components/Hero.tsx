@@ -47,11 +47,11 @@ export function Hero() {
           </h1>
 
           <p className={`${s.follow} mt-4 text-[1rem] text-[var(--s-muted)]`} style={delay(360)}>
-            {profile.role}
+            <span className="whitespace-nowrap">{profile.role}</span>
             <span aria-hidden="true" className="mx-2.5 text-[var(--s-rule)]">
               /
             </span>
-            {profile.location}
+            <span className="whitespace-nowrap">{profile.location}</span>
             <span aria-hidden="true" className="mx-2.5 text-[var(--s-rule)]">
               /
             </span>
